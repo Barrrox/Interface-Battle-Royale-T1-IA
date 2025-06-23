@@ -25,6 +25,22 @@ while running:
 
 
 
+    # Pseudocodigo
+
+    # MAIN():
+        # Criar 3 Treads
+
+        # Thread 1:
+            # Rodar algoritmo 1
+        
+        # Thread 2:
+            # Rodar algoritmo 2
+
+        # Thread 3:
+            # Rodar algoritmo 3
+
+
+
 
 
 

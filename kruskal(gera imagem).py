@@ -97,7 +97,7 @@ def Kruskal():
     im.show()
 
     ## Save maze (include extension!)
-    im.save(input("Save location? "))
+    # im.save(input("Save location? "))
 
     return labirintao
 
