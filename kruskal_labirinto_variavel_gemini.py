@@ -7,8 +7,8 @@ import random
 import numpy as np
 
 
-PAREDE = 1
 CAMINHO = 0
+PAREDE = 1
 INICIO = 2
 FIM = 3
 
@@ -148,9 +148,11 @@ if __name__ == "__main__":
     # --- Para visualizar a imagem (requer Pillow/PIL) ---
     # Converte a matriz para uma imagem em escala de cinza para visualização
     # 0 (caminho) = branco, 1 (parede) = preto, 2 (inicio) e 3 (fim) = cinza
-    imagem_array = np.copy(meu_labirinto) * 255
-    imagem_array[imagem_array == INICIO * 255] = 80 # Entrada
-    imagem_array[imagem_array == FIM * 255] = 80 # Saída
+    imagem_array = np.copy(meu_labirinto)
+    imagem_array[imagem_array == CAMINHO] = 255 # Paredes
+    imagem_array[imagem_array == PAREDE] = 0 # Paredes
+    imagem_array[imagem_array == INICIO] = 200 # Entrada
+    imagem_array[imagem_array == FIM] = 200 # Saída
     
     im = Image.fromarray(imagem_array)
     im.show()
