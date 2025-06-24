@@ -8,7 +8,7 @@ Autores: Matheus Barros, Pedro Lucas
 
 1. Cada algoritmo é uma biblioteca e a interface é a main. Cada grupo deve criar uma função que recebe como parâmetro o labirinto. 
 2. Os algoritmos não podem analisar ou andar na diagonal.
-3. O começo será fixo na posição (0,1) mas a saída do labirinto será aleatóriazada m uma posição nas paredes do quarto quadrante (canto inferior direito). Se temos um labirinto i x j, o fim pode estar entre [int(i/2), j - 1] e [i-2, j-1] ou [int(j/2), i - 1] e [j-2, i-1]
+3. O começo será fixo na posição (1,1) mas a saída do labirinto será aleatóriazada m uma posição adjacente às paredes limitadoras de labirinto do quarto quadrante (canto inferior direito). Se temos um labirinto i x j, o fim pode estar entre [int(i/2), j - 2] e [i-2, j-2] ou [int(j/2), i - 2] e [j-2, i-2]
 
 4. Tamanhos dos labirintos: 
     L1: 71x71 (pedro/roberto)
