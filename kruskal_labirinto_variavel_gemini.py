@@ -108,7 +108,7 @@ def gerar_labirinto_kruskal(width, height):
 
     # --- Passo 4: Definir a entrada e a saída ---
     # Entrada (valor 2) na parede superior esquerda
-    labirinto_matriz[WALL_THICKNESS:WALL_THICKNESS+CELL_THICKNESS, 0] = INICIO
+    labirinto_matriz[WALL_THICKNESS:WALL_THICKNESS+CELL_THICKNESS, 1] = INICIO
 
     # Saída (valor 3) - lógica aprimorada e corrigida
     exit_created = False
@@ -117,7 +117,7 @@ def gerar_labirinto_kruskal(width, height):
         if possible_exits_x:
             exit_node_x = random.choice(possible_exits_x)
             exit_pixel_x = WALL_THICKNESS + exit_node_x * (CELL_THICKNESS + WALL_THICKNESS)
-            labirinto_matriz[array_height - 1, exit_pixel_x:exit_pixel_x+CELL_THICKNESS] = 3
+            labirinto_matriz[array_height - 2, exit_pixel_x:exit_pixel_x+CELL_THICKNESS] = FIM
             exit_created = True
 
     if not exit_created: # Se não conseguiu na inferior, tenta na parede direita
@@ -125,7 +125,7 @@ def gerar_labirinto_kruskal(width, height):
         if possible_exits_y:
             exit_node_y = random.choice(possible_exits_y)
             exit_pixel_y = WALL_THICKNESS + exit_node_y * (CELL_THICKNESS + WALL_THICKNESS)
-            labirinto_matriz[exit_pixel_y:exit_pixel_y+CELL_THICKNESS, array_width - 1] = FIM
+            labirinto_matriz[exit_pixel_y:exit_pixel_y+CELL_THICKNESS, array_width - 2] = FIM
             exit_created = True
 
     # Caso extremo: se nenhuma saída for criada (ex: labirinto 1x1), força uma
@@ -136,11 +136,8 @@ def gerar_labirinto_kruskal(width, height):
 
 # --- Exemplo de Uso ---
 if __name__ == "__main__":
-    # Agora você pode gerar labirintos com qualquer largura e altura
-    LARGURA_DO_LABIRINTO = 20
-    ALTURA_DO_LABIRINTO = 20
 
-    meu_labirinto = gerar_labirinto_kruskal(LARGURA_DO_LABIRINTO, ALTURA_DO_LABIRINTO)
+    meu_labirinto = gerar_labirinto_kruskal(20, 20)
 
     print(f"Matriz do labirinto gerado (dimensões: {meu_labirinto.shape}):")
     # print(meu_labirinto) # Descomente para ver a matriz no console
@@ -151,8 +148,8 @@ if __name__ == "__main__":
     imagem_array = np.copy(meu_labirinto)
     imagem_array[imagem_array == CAMINHO] = 255 # Paredes
     imagem_array[imagem_array == PAREDE] = 0 # Paredes
-    imagem_array[imagem_array == INICIO] = 200 # Entrada
-    imagem_array[imagem_array == FIM] = 200 # Saída
+    imagem_array[imagem_array == INICIO] = 120 # Entrada
+    imagem_array[imagem_array == FIM] = 120 # Saída
     
     im = Image.fromarray(imagem_array)
     im.show()
