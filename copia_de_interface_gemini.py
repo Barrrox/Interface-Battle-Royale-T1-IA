@@ -3,6 +3,7 @@ import threading
 import time
 import random
 from kruskal_labirinto_variavel_gemini import gerar_labirinto_kruskal
+from algoritmos_interface_gemini import *
 
 
 # --- 1. CONFIGURAÇÕES GERAIS E CORES ---
@@ -11,13 +12,13 @@ pygame.font.init()
 
 # Configurações da tela
 LARGURA_TELA = 1290  # Múltiplo de 3 para divisão exata
-ALTURA_TELA = 720
+ALTURA_TELA = 821
 screen = pygame.display.set_mode((LARGURA_TELA, ALTURA_TELA))
 pygame.display.set_caption("Battle Royale de algoritmos de busca")
 
 # Configurações do labirinto
-LARGURA_LABIRINTO_TELA = LARGURA_TELA // 3
-TAMANHO_CELULA = 20
+LARGURA_LABIRINTO_TELA = (LARGURA_TELA // 3)
+TAMANHO_CELULA = 5
 MARGEM = 20  # Margem dentro de cada área de labirinto
 
 # Cores
@@ -37,112 +38,25 @@ fonte_titulo = pygame.font.SysFont('Consolas', 24, bold=True)
 fonte_status = pygame.font.SysFont('Consolas', 30)
 
 
-# --- 2. GERAÇÃO E ESTRUTURA DO LABIRINTO ---
-def gerar_labirinto(largura, altura):
-    """Gera um labirinto simples com paredes externas e alguns obstáculos aleatórios."""
-    labirinto = [[0 for _ in range(largura)] for _ in range(altura)]
-    for y in range(altura):
-        for x in range(largura):
-            if x == 0 or x == largura - 1 or y == 0 or y == altura - 1:
-                labirinto[y][x] = 1  # Parede
-            elif random.random() < 0.25: # 25% de chance de ser uma parede interna
-                labirinto[y][x] = 1
-    
-    # Garante que o início e o fim são caminhos livres
-    labirinto[1][1] = 0
-    labirinto[altura - 2][largura - 2] = 0
-    return labirinto
+# # --- 2. GERAÇÃO E ESTRUTURA DO LABIRINTO ---
 
-# Labirinto idêntico para todos
-LARGURA_LABIRINTO = (LARGURA_LABIRINTO_TELA - 2 * MARGEM) // TAMANHO_CELULA
-ALTURA_LABIRINTO = (ALTURA_TELA - 2 * MARGEM - 50) // TAMANHO_CELULA
+# Definindo manualmente
+LARGURA_LABIRINTO = 30
+ALTURA_LABIRINTO = 30
 LABIRINTO_GLOBAL = gerar_labirinto_kruskal(LARGURA_LABIRINTO, ALTURA_LABIRINTO)
-PONTO_INICIAL = (1, 1)
-PONTO_FINAL = (ALTURA_LABIRINTO - 2, LARGURA_LABIRINTO - 2)
+
+PONTO_INICIAL = (1,1)
 
 
-# --- 3. IMPLEMENTAÇÃO DOS ALGORITMOS ---
-# Cada algoritmo retorna a matriz de histórico conforme especificado.
+for i in range(len(LABIRINTO_GLOBAL)): 
+    if LABIRINTO_GLOBAL[i][-2] == 3: # procura nas linhas finais
+        PONTO_FINAL = (i, len(LABIRINTO_GLOBAL)-2)
+        print(PONTO_FINAL)
 
-def algoritmo_dfs(labirinto, inicio, fim):
-    """Busca em Profundidade (Depth-First Search)"""
-    historico = []
-    pilha = [(inicio, [inicio])]
-    visitados = set([inicio])
-    
-    while pilha:
-        (pos_atual, caminho_parcial) = pilha.pop()
-        
-        # Adiciona a iteração ao histórico no formato pedido
-        # (posição atual, células visitadas na iteração) - aqui, visitados é o conjunto total até agora
-        historico.append([pos_atual] + list(visitados))
-        
-        if pos_atual == fim:
-            historico.append([pos_atual] + list(caminho_parcial)) # Frame final com o caminho
-            return historico # Sucesso
-
-        (y, x) = pos_atual
-        vizinhos = [(y-1, x), (y+1, x), (y, x-1), (y, x+1)]
-        random.shuffle(vizinhos) # Adiciona um pouco de aleatoriedade ao DFS
-
-        for vizinho in vizinhos:
-            (vy, vx) = vizinho
-            if 0 <= vy < len(labirinto) and 0 <= vx < len(labirinto[0]) and labirinto[vy][vx] == 0 and vizinho not in visitados:
-                visitados.add(vizinho)
-                pilha.append((vizinho, caminho_parcial + [vizinho]))
-
-    return historico # Falha
-
-def algoritmo_bfs(labirinto, inicio, fim):
-    """Busca em Largura (Breadth-First Search)"""
-    historico = []
-    fila = [(inicio, [inicio])]
-    visitados = set([inicio])
-    
-    while fila:
-        (pos_atual, caminho_parcial) = fila.pop(0) # A única diferença do DFS: .pop(0)
-        
-        historico.append([pos_atual] + list(visitados))
-        
-        if pos_atual == fim:
-            historico.append([pos_atual] + list(caminho_parcial))
-            return historico
-
-        (y, x) = pos_atual
-        vizinhos = [(y-1, x), (y+1, x), (y, x-1), (y, x+1)]
-
-        for vizinho in vizinhos:
-            (vy, vx) = vizinho
-            if 0 <= vy < len(labirinto) and 0 <= vx < len(labirinto[0]) and labirinto[vy][vx] == 0 and vizinho not in visitados:
-                visitados.add(vizinho)
-                fila.append((vizinho, caminho_parcial + [vizinho]))
-    
-    return historico
-
-def algoritmo_stub(labirinto, inicio, fim):
-    """Um algoritmo 'bobo' para demonstração."""
-    historico = []
-    pos_atual = inicio
-    visitados = set([inicio])
-    
-    while pos_atual != fim:
-        historico.append([pos_atual] + list(visitados))
-        (y, x) = pos_atual
-        
-        # Move-se na diagonal, se possível, de forma ineficiente
-        if x < fim[1] and labirinto[y][x+1] == 0:
-            x += 1
-        elif y < fim[0] and labirinto[y+1][x] == 0:
-            y += 1
-        else: # Beco sem saída, termina
-            break
-            
-        pos_atual = (y, x)
-        visitados.add(pos_atual)
-        time.sleep(0.01) # Simula um algoritmo mais lento
-
-    historico.append([pos_atual] + list(visitados))
-    return historico
+for i in range(len(LABIRINTO_GLOBAL[0])): 
+    if LABIRINTO_GLOBAL[-2][i] == 3: # procura nas linhas finais
+        PONTO_FINAL = (len(LABIRINTO_GLOBAL)-2, i)
+        print(PONTO_FINAL)
 
 
 # --- 4. LÓGICA DE THREADING E EXECUÇÃO ---
@@ -211,7 +125,7 @@ def main():
     
     indice_animacao = 0
     tempo_animacao = 0
-    velocidade_animacao = 0.05 # segundos por passo
+    velocidade_animacao = 0.01 # segundos por passo
 
     botao_start_rect = pygame.Rect(LARGURA_TELA / 2 - 100, ALTURA_TELA / 2 - 25, 200, 50)
 
