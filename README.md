@@ -26,5 +26,7 @@ Autores: Matheus Barros, Pedro Lucas
 8. Interface
     1. Utilizar Pygame
 
+# TO DO
 
+[] Alterar o código da interface para receber corretamente a matriz descrita em ideias_para_interface.md
 
