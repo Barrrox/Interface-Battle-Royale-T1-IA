@@ -2,6 +2,7 @@ import pygame
 import threading
 import time
 import random
+# Supondo que estes arquivos existam e funcionem como discutido anteriormente
 from kruskal_labirinto_variavel_gemini import gerar_labirinto_kruskal
 from algoritmos_interface_gemini import *
 
@@ -16,6 +17,8 @@ ALTURA_TELA = 821
 screen = pygame.display.set_mode((LARGURA_TELA, ALTURA_TELA))
 pygame.display.set_caption("Battle Royale de algoritmos de busca")
 
+
+
 # Configurações do labirinto
 LARGURA_LABIRINTO_TELA = (LARGURA_TELA // 3)
 TAMANHO_CELULA = 5
@@ -27,10 +30,14 @@ COR_PAREDE = (139, 69, 19) # Marrom
 COR_CAMINHO = (255, 255, 255) # Branco
 COR_VISITADA = (173, 216, 230) # Azul claro
 COR_POS_ATUAL = (0, 255, 0) # Verde
-COR_FINAL = (255, 215, 0) # Dourado
+COR_FINAL = (255, 215, 0) # Dourado (Para o caminho final)
 COR_TEXTO = (255, 255, 255) # Branco
 COR_BOTAO = (0, 100, 0)
 COR_BOTAO_HOVER = (0, 150, 0)
+
+### NOVO: Cores específicas para os marcadores de início e fim ###
+COR_INICIO = (0, 255, 255)    # Ciano
+COR_DESTINO = (255, 0, 255)  # Magenta
 
 # Fonte para texto
 fonte_padrao = pygame.font.SysFont('Consolas', 20)
@@ -38,22 +45,23 @@ fonte_titulo = pygame.font.SysFont('Consolas', 24, bold=True)
 fonte_status = pygame.font.SysFont('Consolas', 30)
 
 
-# # --- 2. GERAÇÃO E ESTRUTURA DO LABIRINTO ---
+# --- 2. GERAÇÃO E ESTRUTURA DO LABIRINTO ---
 
 # Definindo manualmente
-LARGURA_LABIRINTO = 30
-ALTURA_LABIRINTO = 30
+LARGURA_LABIRINTO = 40
+ALTURA_LABIRINTO = 60
 LABIRINTO_GLOBAL = gerar_labirinto_kruskal(LARGURA_LABIRINTO, ALTURA_LABIRINTO)
 
 PONTO_INICIAL = (1,1)
 
-
-for i in range(len(LABIRINTO_GLOBAL)): 
+# Nota: Recomendo usar a versão mais robusta para encontrar o ponto final
+# ou defini-lo estaticamente, como discutido anteriormente.
+for i in range(len(LABIRINTO_GLOBAL)):
     if LABIRINTO_GLOBAL[i][-2] == 3: # procura nas linhas finais
         PONTO_FINAL = (i, len(LABIRINTO_GLOBAL)-2)
         print(PONTO_FINAL)
 
-for i in range(len(LABIRINTO_GLOBAL[0])): 
+for i in range(len(LABIRINTO_GLOBAL[0])):
     if LABIRINTO_GLOBAL[-2][i] == 3: # procura nas linhas finais
         PONTO_FINAL = (len(LABIRINTO_GLOBAL)-2, i)
         print(PONTO_FINAL)
@@ -86,10 +94,18 @@ def desenhar_labirinto(surface, labirinto, offset_x, offset_y):
     """Desenha o estado estático do labirinto (paredes e caminhos)."""
     for y, linha in enumerate(labirinto):
         for x, celula in enumerate(linha):
-            cor = COR_PAREDE if celula == 1 else COR_CAMINHO
+            # Desenha a saída (célula 3) com a cor do destino para ser visível desde o início
+            if celula == 3:
+                 cor = COR_DESTINO
+            # Mantém a lógica anterior para paredes e caminhos
+            elif celula == 1:
+                cor = COR_PAREDE
+            else:
+                cor = COR_CAMINHO
             pygame.draw.rect(surface, cor, (offset_x + x * TAMANHO_CELULA, offset_y + y * TAMANHO_CELULA, TAMANHO_CELULA, TAMANHO_CELULA))
 
-def desenhar_passos(surface, iteracao_historico, offset_x, offset_y, caminho_final=[]):
+### MODIFICADO: A função agora aceita `inicio` e `fim` como parâmetros ###
+def desenhar_passos(surface, iteracao_historico, offset_x, offset_y, inicio, fim, caminho_final=[]):
     """Desenha o estado dinâmico (passos do algoritmo) sobre o labirinto."""
     if not iteracao_historico:
         return
@@ -98,13 +114,22 @@ def desenhar_passos(surface, iteracao_historico, offset_x, offset_y, caminho_fin
     celulas_visitadas = iteracao_historico[1:]
     for y, x in celulas_visitadas:
         pygame.draw.rect(surface, COR_VISITADA, (offset_x + x * TAMANHO_CELULA, offset_y + y * TAMANHO_CELULA, TAMANHO_CELULA, TAMANHO_CELULA))
+
+    ### NOVO: Desenha marcadores para o início e o fim ###
+    # Eles são desenhados depois das células visitadas, mas antes do caminho final e da posição atual,
+    # para que fiquem sempre visíveis como referência.
+    iy, ix = inicio
+    pygame.draw.rect(surface, COR_INICIO, (offset_x + ix * TAMANHO_CELULA, offset_y + iy * TAMANHO_CELULA, TAMANHO_CELULA, TAMANHO_CELULA))
     
-    # Se a animação acabou, pinta o caminho final
+    fy, fx = fim
+    pygame.draw.rect(surface, COR_DESTINO, (offset_x + fx * TAMANHO_CELULA, offset_y + fy * TAMANHO_CELULA, TAMANHO_CELULA, TAMANHO_CELULA))
+
+    # Se a animação acabou, pinta o caminho final (cor Dourada)
     if caminho_final:
         for y, x in caminho_final:
             pygame.draw.rect(surface, COR_FINAL, (offset_x + x * TAMANHO_CELULA, offset_y + y * TAMANHO_CELULA, TAMANHO_CELULA, TAMANHO_CELULA))
 
-    # Pinta a posição atual por cima de tudo
+    # Pinta a posição atual por cima de tudo (cor Verde)
     pos_atual = iteracao_historico[0]
     py, px = pos_atual
     pygame.draw.rect(surface, COR_POS_ATUAL, (offset_x + px * TAMANHO_CELULA, offset_y + py * TAMANHO_CELULA, TAMANHO_CELULA, TAMANHO_CELULA))
@@ -125,7 +150,7 @@ def main():
     
     indice_animacao = 0
     tempo_animacao = 0
-    velocidade_animacao = 0.01 # segundos por passo
+    velocidade_animacao = 0.00002 # segundos por passo
 
     botao_start_rect = pygame.Rect(LARGURA_TELA / 2 - 100, ALTURA_TELA / 2 - 25, 200, 50)
 
@@ -158,10 +183,12 @@ def main():
                 tempo_animacao = 0
             
             # Verifica se todas as animações terminaram
-            max_len = max(len(res["historico"]) for res in resultados.values())
-            if indice_animacao >= max_len:
-                estado_app = "FINALIZADO"
-                indice_animacao = max_len -1 # Trava no último frame
+            # Adicionado um tratamento de erro para caso um histórico esteja vazio
+            if resultados:
+                max_len = max(len(res["historico"]) for res in resultados.values() if res["historico"])
+                if indice_animacao >= max_len:
+                    estado_app = "FINALIZADO"
+                    indice_animacao = max_len -1 # Trava no último frame
 
         # Lógica de desenho
         screen.fill(COR_FUNDO)
@@ -189,7 +216,7 @@ def main():
             
             for i, nome in enumerate(algoritmos.keys()):
                 offset_x = offsets_x[i] + MARGEM
-                offset_y = MARGEM + 50 # Espaço para o título
+                offset_y = MARGEM + (ALTURA_TELA/2 - (ALTURA_TELA/2 - (ALTURA_LABIRINTO*2.5))) # Espaço para o título
 
                 # Desenha o título e o tempo de execução
                 titulo_surf = fonte_titulo.render(nome, True, COR_TEXTO)
@@ -204,14 +231,15 @@ def main():
                 
                 # Desenha os passos do algoritmo
                 historico_atual = resultados[nome]["historico"]
-                passo_atual = min(indice_animacao, len(historico_atual) - 1)
-                
-                caminho_final = []
-                if estado_app == "FINALIZADO":
-                    caminho_final = resultados[nome]["caminho_final"]
+                if historico_atual: # Garante que o histórico não está vazio
+                    passo_atual = min(indice_animacao, len(historico_atual) - 1)
+                    
+                    caminho_final = []
+                    if estado_app == "FINALIZADO":
+                        caminho_final = resultados[nome]["caminho_final"]
 
-                if historico_atual:
-                    desenhar_passos(screen, historico_atual[passo_atual], offset_x, offset_y, caminho_final)
+                    ### MODIFICADO: Passa PONTO_INICIAL e PONTO_FINAL para a função de desenho ###
+                    desenhar_passos(screen, historico_atual[passo_atual], offset_x, offset_y, PONTO_INICIAL, PONTO_FINAL, caminho_final)
 
         pygame.display.flip()
         clock.tick(60)
