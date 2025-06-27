@@ -1,6 +1,4 @@
-# Ideias para plotagem dos labirintos na interface
-
-# ideia 3
+# O que cada algoritmo deve retornar?
 
 Cada algoritmo deve retornar uma matriz com n iterações. Cada iteração deve conter um array com m tuplas. A primeira tupla (matriz[i][0]) deve conter a posição atual do algoritmo. As m - 1 tuplas seguintes devem conter as celulas visitadas pelo algoritmo naquela iteração.
 Essa matriz é necessária para a plotagem do labirinto e não vai influenciar na execução do código.

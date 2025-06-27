@@ -1,3 +1,8 @@
+"""
+O arquivo contém os algoritmos criados pelo gemini para testas a interface
+
+"""
+
 import random
 import time
 

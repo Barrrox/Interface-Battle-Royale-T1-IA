@@ -1,3 +1,12 @@
+"""
+Código cópia criado a partir do arquivo interface_gemini.py
+
+Alterações feitas por Barros e Pedro
+
+
+"""
+
+
 import pygame
 import threading
 import time
