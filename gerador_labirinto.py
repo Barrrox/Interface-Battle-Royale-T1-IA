@@ -17,8 +17,8 @@ FIM = 3
 
 # --- Parâmetros de Geração ---
 # Você pode alterar estes valores.
-CELL_THICKNESS = 1  # Espessura de uma célula de caminho
-WALL_THICKNESS = 1  # Espessura de uma parede
+1 = 1  # Espessura de uma célula de caminho
+1 = 1  # Espessura de uma parede
 
 class DisjointSet:
     """
@@ -88,51 +88,51 @@ def gerar_labirinto_kruskal(width, height):
 
     # --- Passo 3: Construir a matriz do labirinto a partir das arestas ---
     # Dimensões da matriz em pixels, usando o padrão (altura, largura)
-    array_height = height * (CELL_THICKNESS + WALL_THICKNESS) + WALL_THICKNESS
-    array_width = width * (CELL_THICKNESS + WALL_THICKNESS) + WALL_THICKNESS
+    array_height = height * (1 + 1) + 1
+    array_width = width * (1 + 1) + 1
     
     # Labirinto começa todo como parede (valor 1)
     labirinto_matriz = np.ones((array_height, array_width), dtype=np.uint8)
 
     # Desenha os caminhos na matriz (valor 0)
     for edge in maze_edges:
-        # Usa a convenção (linha, coluna) == (y, x)
+        # (linha, coluna) == (y, x)
         y1, x1 = edge[0][1], edge[0][0]
         y2, x2 = edge[1][1], edge[1][0]
         
         # Coordenadas em pixels
-        px_start_y = WALL_THICKNESS + min(y1, y2) * (CELL_THICKNESS + WALL_THICKNESS)
-        px_end_y = WALL_THICKNESS + max(y1, y2) * (CELL_THICKNESS + WALL_THICKNESS) + CELL_THICKNESS
-        px_start_x = WALL_THICKNESS + min(x1, x2) * (CELL_THICKNESS + WALL_THICKNESS)
-        px_end_x = WALL_THICKNESS + max(x1, x2) * (CELL_THICKNESS + WALL_THICKNESS) + CELL_THICKNESS
+        px_start_y = 1 + min(y1, y2) * (1 + 1)
+        px_end_y = 1 + max(y1, y2) * (1 + 1) + 1
+        px_start_x = 1 + min(x1, x2) * (1 + 1)
+        px_end_x = 1 + max(x1, x2) * (1 + 1) + 1
 
         labirinto_matriz[px_start_y:px_end_y, px_start_x:px_end_x] = CAMINHO
 
     # --- Passo 4: Definir a entrada e a saída ---
     # Entrada (valor 2) na parede superior esquerda
-    labirinto_matriz[WALL_THICKNESS:WALL_THICKNESS+CELL_THICKNESS, 1] = INICIO
+    labirinto_matriz[1:1+1, 1] = INICIO
 
     # Saída (valor 3) - lógica aprimorada e corrigida
     exit_created = False
     if random.randint(0, 1) == 0: # Tenta criar na parede inferior
-        possible_exits_x = [x for x in range(width) if labirinto_matriz[array_height - 2, WALL_THICKNESS + x * (CELL_THICKNESS + WALL_THICKNESS)] == CAMINHO]
+        possible_exits_x = [x for x in range(width) if labirinto_matriz[array_height - 2, 1 + x * (1 + 1)] == CAMINHO]
         if possible_exits_x:
             exit_node_x = random.choice(possible_exits_x)
-            exit_pixel_x = WALL_THICKNESS + exit_node_x * (CELL_THICKNESS + WALL_THICKNESS)
-            labirinto_matriz[array_height - 2, exit_pixel_x:exit_pixel_x+CELL_THICKNESS] = FIM
+            exit_pixel_x = 1 + exit_node_x * (1 + 1)
+            labirinto_matriz[array_height - 2, exit_pixel_x:exit_pixel_x+1] = FIM
             exit_created = True
 
     if not exit_created: # Se não conseguiu na inferior, tenta na parede direita
-        possible_exits_y = [y for y in range(height) if labirinto_matriz[WALL_THICKNESS + y * (CELL_THICKNESS + WALL_THICKNESS), array_width - 2] == CAMINHO]
+        possible_exits_y = [y for y in range(height) if labirinto_matriz[1 + y * (1 + 1), array_width - 2] == CAMINHO]
         if possible_exits_y:
             exit_node_y = random.choice(possible_exits_y)
-            exit_pixel_y = WALL_THICKNESS + exit_node_y * (CELL_THICKNESS + WALL_THICKNESS)
-            labirinto_matriz[exit_pixel_y:exit_pixel_y+CELL_THICKNESS, array_width - 2] = FIM
+            exit_pixel_y = 1 + exit_node_y * (1 + 1)
+            labirinto_matriz[exit_pixel_y:exit_pixel_y+1, array_width - 2] = FIM
             exit_created = True
 
     # Caso extremo: se nenhuma saída for criada (ex: labirinto 1x1), força uma
     if not exit_created:
-        labirinto_matriz[-1, -1-CELL_THICKNESS:-1] = FIM
+        labirinto_matriz[-1, -1-1:-1] = FIM
         
     return labirinto_matriz
 
