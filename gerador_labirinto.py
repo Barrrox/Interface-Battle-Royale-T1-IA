@@ -14,12 +14,6 @@ PAREDE = 1
 INICIO = 2
 FIM = 3
 
-
-# --- Parâmetros de Geração ---
-# Você pode alterar estes valores.
-1 = 1  # Espessura de uma célula de caminho
-1 = 1  # Espessura de uma parede
-
 class DisjointSet:
     """
     Estrutura de dados para o algoritmo de Kruskal.
@@ -88,8 +82,8 @@ def gerar_labirinto_kruskal(width, height):
 
     # --- Passo 3: Construir a matriz do labirinto a partir das arestas ---
     # Dimensões da matriz em pixels, usando o padrão (altura, largura)
-    array_height = height * (1 + 1) + 1
-    array_width = width * (1 + 1) + 1
+    array_height = height * 2 + 1
+    array_width = width * 2 + 1
     
     # Labirinto começa todo como parede (valor 1)
     labirinto_matriz = np.ones((array_height, array_width), dtype=np.uint8)
@@ -101,32 +95,36 @@ def gerar_labirinto_kruskal(width, height):
         y2, x2 = edge[1][1], edge[1][0]
         
         # Coordenadas em pixels
-        px_start_y = 1 + min(y1, y2) * (1 + 1)
-        px_end_y = 1 + max(y1, y2) * (1 + 1) + 1
-        px_start_x = 1 + min(x1, x2) * (1 + 1)
-        px_end_x = 1 + max(x1, x2) * (1 + 1) + 1
+        px_start_y = 1 + min(y1, y2) * 2
+        px_end_y = 1 + max(y1, y2) * 2 + 1
+        px_start_x = 1 + min(x1, x2) * 2
+        px_end_x = 1 + max(x1, x2) * 2 + 1
 
+        # Desenha os caminhos baseando-se na árvore do labirinto criada anteriormente
         labirinto_matriz[px_start_y:px_end_y, px_start_x:px_end_x] = CAMINHO
 
     # --- Passo 4: Definir a entrada e a saída ---
     # Entrada (valor 2) na parede superior esquerda
     labirinto_matriz[1:1+1, 1] = INICIO
 
-    # Saída (valor 3) - lógica aprimorada e corrigida
+    # Saída (valor 3)
+    # A saída estará em um dos dois:
+    # 1. na metade da parede direita até a parede inferior 
+    # 2. na metade da parede inferior até a parede da direita
     exit_created = False
     if random.randint(0, 1) == 0: # Tenta criar na parede inferior
-        possible_exits_x = [x for x in range(width) if labirinto_matriz[array_height - 2, 1 + x * (1 + 1)] == CAMINHO]
+        possible_exits_x = [x for x in range(width) if labirinto_matriz[array_height - 2, 1 + x * 2] == CAMINHO]
         if possible_exits_x:
             exit_node_x = random.choice(possible_exits_x)
-            exit_pixel_x = 1 + exit_node_x * (1 + 1)
+            exit_pixel_x = 1 + exit_node_x * 2
             labirinto_matriz[array_height - 2, exit_pixel_x:exit_pixel_x+1] = FIM
             exit_created = True
 
     if not exit_created: # Se não conseguiu na inferior, tenta na parede direita
-        possible_exits_y = [y for y in range(height) if labirinto_matriz[1 + y * (1 + 1), array_width - 2] == CAMINHO]
+        possible_exits_y = [y for y in range(height) if labirinto_matriz[1 + y * 2, array_width - 2] == CAMINHO]
         if possible_exits_y:
             exit_node_y = random.choice(possible_exits_y)
-            exit_pixel_y = 1 + exit_node_y * (1 + 1)
+            exit_pixel_y = 1 + exit_node_y * 2
             labirinto_matriz[exit_pixel_y:exit_pixel_y+1, array_width - 2] = FIM
             exit_created = True
 
