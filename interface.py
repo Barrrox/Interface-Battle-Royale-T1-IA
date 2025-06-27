@@ -12,8 +12,8 @@ import threading
 import time
 import random
 # Supondo que estes arquivos existam e funcionem como discutido anteriormente
-from kruskal_labirinto_variavel_gemini import gerar_labirinto_kruskal
-from algoritmos_interface_gemini import *
+from gerador_labirinto import gerar_labirinto_kruskal
+from algoritmos_teste import *
 
 
 # --- 1. CONFIGURAÇÕES GERAIS E CORES ---

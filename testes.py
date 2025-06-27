@@ -1,5 +1,13 @@
-from kruskal_labirinto_variavel_gemini import gerar_labirinto_kruskal
-from copia_de_interface_gemini import gerar_labirinto
+"""
+Código para fins de testes
+
+Feito por Barros
+
+"""
+
+
+from gerador_labirinto import gerar_labirinto_kruskal
+from interface import gerar_labirinto
 
 
 
