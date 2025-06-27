@@ -46,4 +46,5 @@ matriz = [
 
 [ ] Alterar o código da interface para receber corretamente a matriz descrita em ideias_para_interface.md
 [ ] Implementar contador de casas visitadas
+[ ] Alterar o código para excluir o 2*i + 1 na criação do labirinto
 
