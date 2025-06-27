@@ -7,12 +7,8 @@ que cria e retorna um labrinto em forma de matriz, seguindo o algoritmo de Krusk
 from PIL import Image
 import random
 import numpy as np
+import parametros
 
-
-CAMINHO = 0
-PAREDE = 1
-INICIO = 2
-FIM = 3
 
 class DisjointSet:
     """
@@ -60,6 +56,10 @@ def gerar_labirinto_kruskal(width, height):
     Returns:
         numpy.ndarray: Uma matriz 2D onde 0=caminho, 1=parede, 2=início, 3=saída.
     """
+    CAMINHO = parametros.CAMINHO
+    PAREDE = parametros.PAREDE
+    INICIO = parametros.INICIO
+    FIM = parametros.FIM
     # --- Passo 1: Definir nós e arestas com base na largura e altura ---
     nodes = [(x, y) for y in range(height) for x in range(width)]
     
@@ -138,6 +138,11 @@ def gerar_labirinto_kruskal(width, height):
 if __name__ == "__main__":
 
     meu_labirinto = gerar_labirinto_kruskal(20, 20)
+
+    CAMINHO = parametros.CAMINHO
+    PAREDE = parametros.PAREDE
+    INICIO = parametros.INICIO
+    FIM = parametros.FIM
 
     print(f"Matriz do labirinto gerado (dimensões: {meu_labirinto.shape}):")
     # print(meu_labirinto) # Descomente para ver a matriz no console
