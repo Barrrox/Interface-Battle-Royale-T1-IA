@@ -6,6 +6,23 @@ Autores: Matheus Barros, Pedro Lucas
 
 Apoio: Silva, Lora, Hermes, Roberto
 
+# Explicação dos arquivos desse repositório
+
+### interface.py 
+"é a main", ou seja, o que deve ser executado para computar os algoritmos e mostrar a animação.
+
+### parametros.py
+
+Guarda variáveis globais e parâmetros utilizados em todos os códigos
+
+### gerador_labirinto.py
+
+Tem a função para gerar labirinto
+
+### algoritmos_teste.py
+
+guarda 3 algoritmos de teste para usar enquanto a interface foi implementada
+
 # Decisões de projeto:
 
 1. Cada algoritmo é uma biblioteca e a interface é a main. Cada grupo deve criar uma função que recebe como parâmetro o labirinto. 
@@ -44,7 +61,7 @@ matriz = [
 
 # TO DO
 
-[ ] Alterar o código da interface para receber corretamente a matriz descrita em ideias_para_interface.md
+[ ] Alterar o código da interface para receber corretamente a matriz que cada algoritmo deve retornar
 [ ] Implementar contador de casas visitadas
 [ ] Alterar o código para excluir o 2*i + 1 na criação do labirinto
 [X] Adicionar Pause
