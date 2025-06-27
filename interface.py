@@ -61,6 +61,9 @@ LARGURA_LABIRINTO = 20
 ALTURA_LABIRINTO = 20
 LABIRINTO_GLOBAL = gerar_labirinto_kruskal(LARGURA_LABIRINTO, ALTURA_LABIRINTO)
 
+
+# --- 3. DEFININDO PONTO INICIAL E FINAL ---
+
 PONTO_INICIAL = (1,1)
 
 # Nota: Recomendo usar a versão mais robusta para encontrar o ponto final
