@@ -57,8 +57,8 @@ fonte_status = pygame.font.SysFont('Consolas', 30)
 # --- 2. GERAÇÃO E ESTRUTURA DO LABIRINTO ---
 
 # Definindo manualmente
-LARGURA_LABIRINTO = 40
-ALTURA_LABIRINTO = 60
+LARGURA_LABIRINTO = 20
+ALTURA_LABIRINTO = 20
 LABIRINTO_GLOBAL = gerar_labirinto_kruskal(LARGURA_LABIRINTO, ALTURA_LABIRINTO)
 
 PONTO_INICIAL = (1,1)
@@ -66,13 +66,13 @@ PONTO_INICIAL = (1,1)
 # Nota: Recomendo usar a versão mais robusta para encontrar o ponto final
 # ou defini-lo estaticamente, como discutido anteriormente.
 for i in range(len(LABIRINTO_GLOBAL)):
-    if LABIRINTO_GLOBAL[i][-2] == 3: # procura nas linhas finais
-        PONTO_FINAL = (i, len(LABIRINTO_GLOBAL)-2)
+    if LABIRINTO_GLOBAL[i][-1] == 3: # procura nas linhas finais
+        PONTO_FINAL = (i, len(LABIRINTO_GLOBAL)-1)
         print(PONTO_FINAL)
 
 for i in range(len(LABIRINTO_GLOBAL[0])):
-    if LABIRINTO_GLOBAL[-2][i] == 3: # procura nas linhas finais
-        PONTO_FINAL = (len(LABIRINTO_GLOBAL)-2, i)
+    if LABIRINTO_GLOBAL[-1][i] == 3: # procura nas linhas finais
+        PONTO_FINAL = (len(LABIRINTO_GLOBAL)-1, i)
         print(PONTO_FINAL)
 
 

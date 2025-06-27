@@ -117,7 +117,7 @@ def gerar_labirinto_kruskal(width, height):
         if possible_exits_x:
             exit_node_x = random.choice(possible_exits_x)
             exit_pixel_x = 1 + exit_node_x * 2
-            labirinto_matriz[array_height - 2, exit_pixel_x:exit_pixel_x+1] = FIM
+            labirinto_matriz[array_height - 1, exit_pixel_x:exit_pixel_x+1] = FIM
             exit_created = True
 
     if not exit_created: # Se não conseguiu na inferior, tenta na parede direita
@@ -125,7 +125,7 @@ def gerar_labirinto_kruskal(width, height):
         if possible_exits_y:
             exit_node_y = random.choice(possible_exits_y)
             exit_pixel_y = 1 + exit_node_y * 2
-            labirinto_matriz[exit_pixel_y:exit_pixel_y+1, array_width - 2] = FIM
+            labirinto_matriz[exit_pixel_y:exit_pixel_y+1, array_width - 1] = FIM
             exit_created = True
 
     # Caso extremo: se nenhuma saída for criada (ex: labirinto 1x1), força uma
