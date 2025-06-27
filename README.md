@@ -44,5 +44,6 @@ matriz = [
 
 # TO DO
 
-[] Alterar o código da interface para receber corretamente a matriz descrita em ideias_para_interface.md
+[ ] Alterar o código da interface para receber corretamente a matriz descrita em ideias_para_interface.md
+[ ] Implementar contador de casas visitadas
 
