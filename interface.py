@@ -11,27 +11,27 @@ import pygame
 import threading
 import time
 import random
+import parametros
 # Supondo que estes arquivos existam e funcionem como discutido anteriormente
-from gerador_labirinto import gerar_labirinto_kruskal
 from algoritmos_teste import *
 
 
 # --- 1. CONFIGURAÇÕES GERAIS E CORES ---
+LARGURA_TELA = parametros.LARGURA_TELA
+ALTURA_TELA = parametros.ALTURA_TELA
 pygame.init()
 pygame.font.init()
 
 # Configurações da tela
-LARGURA_TELA = 1290  # Múltiplo de 3 para divisão exata
-ALTURA_TELA = 821
+
 screen = pygame.display.set_mode((LARGURA_TELA, ALTURA_TELA))
 pygame.display.set_caption("Battle Royale de algoritmos de busca")
 
 
-
 # Configurações do labirinto
 LARGURA_LABIRINTO_TELA = (LARGURA_TELA // 3)
-TAMANHO_CELULA = 5
-MARGEM = 20  # Margem dentro de cada área de labirinto
+TAMANHO_CELULA = parametros.TAMANHO_CELULA
+MARGEM_ESQUERDA = parametros.MARGEM_ESQUERDA 
 
 # Cores
 COR_FUNDO = (0, 0, 0) # Preto
@@ -45,7 +45,7 @@ COR_BOTAO = (0, 100, 0)
 COR_BOTAO_HOVER = (0, 150, 0)
 
 ### NOVO: Cores específicas para os marcadores de início e fim ###
-COR_INICIO = (0, 255, 255)    # Ciano
+COR_INICIO = (0, 255, 255)   # Ciano
 COR_DESTINO = (255, 0, 255)  # Magenta
 
 # Fonte para texto
@@ -57,26 +57,15 @@ fonte_status = pygame.font.SysFont('Consolas', 30)
 # --- 2. GERAÇÃO E ESTRUTURA DO LABIRINTO ---
 
 # Definindo manualmente
-LARGURA_LABIRINTO = 20
-ALTURA_LABIRINTO = 20
-LABIRINTO_GLOBAL = gerar_labirinto_kruskal(LARGURA_LABIRINTO, ALTURA_LABIRINTO)
+LARGURA_LABIRINTO = parametros.LARGURA_LABIRINTO
+ALTURA_LABIRINTO = parametros.ALTURA_LABIRINTO
+LABIRINTO_GLOBAL = parametros.LABIRINTO_GLOBAL
 
 
 # --- 3. DEFININDO PONTO INICIAL E FINAL ---
 
-PONTO_INICIAL = (1,1)
-
-# Nota: Recomendo usar a versão mais robusta para encontrar o ponto final
-# ou defini-lo estaticamente, como discutido anteriormente.
-for i in range(len(LABIRINTO_GLOBAL)):
-    if LABIRINTO_GLOBAL[i][-1] == 3: # procura nas linhas finais
-        PONTO_FINAL = (i, len(LABIRINTO_GLOBAL)-1)
-        print(PONTO_FINAL)
-
-for i in range(len(LABIRINTO_GLOBAL[0])):
-    if LABIRINTO_GLOBAL[-1][i] == 3: # procura nas linhas finais
-        PONTO_FINAL = (len(LABIRINTO_GLOBAL)-1, i)
-        print(PONTO_FINAL)
+PONTO_INICIAL = parametros.PONTO_INICIAL
+PONTO_FINAL = parametros.PONTO_FINAL
 
 
 # --- 4. LÓGICA DE THREADING E EXECUÇÃO ---
@@ -227,16 +216,16 @@ def main():
             offsets_x = [0, LARGURA_LABIRINTO_TELA, LARGURA_LABIRINTO_TELA * 2]
             
             for i, nome in enumerate(algoritmos.keys()):
-                offset_x = offsets_x[i] + MARGEM
-                offset_y = MARGEM + (ALTURA_TELA/2 - (ALTURA_TELA/2 - (ALTURA_LABIRINTO*2.5))) # Espaço para o título
+                offset_x = offsets_x[i] + MARGEM_ESQUERDA
+                offset_y = MARGEM_ESQUERDA + (ALTURA_TELA/2 - (ALTURA_TELA/2 - (ALTURA_LABIRINTO*2.5))) # Espaço para o título
 
                 # Desenha o título e o tempo de execução
                 titulo_surf = fonte_titulo.render(nome, True, COR_TEXTO)
-                screen.blit(titulo_surf, (offset_x, MARGEM))
+                screen.blit(titulo_surf, (offset_x, MARGEM_ESQUERDA))
                 
                 tempo = resultados[nome]['tempo']
                 tempo_surf = fonte_padrao.render(f"Tempo: {tempo:.4f}s", True, COR_TEXTO)
-                screen.blit(tempo_surf, (offset_x, MARGEM + 25))
+                screen.blit(tempo_surf, (offset_x, MARGEM_ESQUERDA + 25))
 
                 # Desenha o labirinto base
                 desenhar_labirinto(screen, LABIRINTO_GLOBAL, offset_x, offset_y)
