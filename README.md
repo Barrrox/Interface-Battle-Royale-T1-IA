@@ -4,6 +4,8 @@ Repositório para a interface da competição de algoritmos de busca em um labir
 
 Autores: Matheus Barros, Pedro Lucas
 
+Apoio: Silva, Lora, Hermes, Roberto
+
 # Decisões de projeto:
 
 1. Cada algoritmo é uma biblioteca e a interface é a main. Cada grupo deve criar uma função que recebe como parâmetro o labirinto. 
@@ -25,6 +27,20 @@ Autores: Matheus Barros, Pedro Lucas
 7. O labirinto terá paredes para delimitação.
 8. Interface
     1. Utilizar Pygame
+
+# O que cada algoritmo deve retornar?
+
+Cada algoritmo deve retornar uma matriz com n iterações. Cada iteração deve conter um array com m tuplas. A primeira tupla (matriz[i][0]) deve conter a posição atual do algoritmo. As m - 1 tuplas seguintes devem conter as celulas visitadas pelo algoritmo naquela iteração.
+Essa matriz é necessária para a plotagem do labirinto e não vai influenciar na execução do código.
+
+matriz = [
+    [(0,0),(0,1),(1,0)], # i = 0
+    [(0,1),(1,1),(0,2)], # i = 1
+    [(1,1),(2,1),(1,2)], # i = 2
+    [(2,1)],             # i = 3, beco sem saída, voltar a (1,1)
+    [(1,2),(1,2)], # i = 4
+    [(2,2)]              # i = 5, fim
+]
 
 # TO DO
 

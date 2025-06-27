@@ -1,6 +1,8 @@
-# Kruskal's Algorithm for Maze Generation
-# Original by Neil Thistlethwaite
-# Modificado para aceitar largura e altura variáveis e com lógica de saída corrigida.
+"""
+Código redesenhado pelo gemini para implementar a função gerar_labirinto_kruskal(width, height)
+que cria e retorna um labrinto em forma de matriz, seguindo o algoritmo de Kruskal
+
+"""
 
 from PIL import Image
 import random
