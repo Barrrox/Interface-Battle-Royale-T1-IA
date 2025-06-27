@@ -3,7 +3,7 @@ Código cópia criado a partir do arquivo interface_gemini.py
 
 Alterações feitas por Barros e Pedro
 
-
+### MODIFICADO: Adicionado estado de PAUSA por Gemini ###
 """
 
 
@@ -23,7 +23,6 @@ pygame.init()
 pygame.font.init()
 
 # Configurações da tela
-
 screen = pygame.display.set_mode((LARGURA_TELA, ALTURA_TELA))
 pygame.display.set_caption("Battle Royale de algoritmos de busca")
 
@@ -31,7 +30,7 @@ pygame.display.set_caption("Battle Royale de algoritmos de busca")
 # Configurações do labirinto
 LARGURA_LABIRINTO_TELA = (LARGURA_TELA // 3)
 TAMANHO_CELULA = parametros.TAMANHO_CELULA
-MARGEM_ESQUERDA = parametros.MARGEM_ESQUERDA 
+MARGEM_ESQUERDA = parametros.MARGEM_ESQUERDA
 
 # Cores
 COR_FUNDO = (0, 0, 0) # Preto
@@ -43,6 +42,9 @@ COR_FINAL = (255, 215, 0) # Dourado (Para o caminho final)
 COR_TEXTO = (255, 255, 255) # Branco
 COR_BOTAO = (0, 100, 0)
 COR_BOTAO_HOVER = (0, 150, 0)
+COR_BOTAO_PAUSA = (180, 0, 0)
+COR_BOTAO_PAUSA_HOVER = (230, 0, 0)
+
 
 ### NOVO: Cores específicas para os marcadores de início e fim ###
 COR_INICIO = (0, 255, 255)   # Ciano
@@ -51,7 +53,7 @@ COR_DESTINO = (255, 0, 255)  # Magenta
 # Fonte para texto
 fonte_padrao = pygame.font.SysFont('Consolas', 20)
 fonte_titulo = pygame.font.SysFont('Consolas', 24, bold=True)
-fonte_status = pygame.font.SysFont('Consolas', 30)
+fonte_status = pygame.font.SysFont('Consolas', 40, bold=True)
 
 
 # --- 2. GERAÇÃO E ESTRUTURA DO LABIRINTO ---
@@ -77,7 +79,7 @@ def executar_algoritmo(func_algoritmo, nome, labirinto, inicio, fim):
     tempo_inicial = time.perf_counter()
     matriz_historico = func_algoritmo(labirinto, inicio, fim)
     tempo_final = time.perf_counter()
-    
+
     resultados[nome] = {
         "historico": matriz_historico,
         "tempo": tempo_final - tempo_inicial,
@@ -97,7 +99,7 @@ def desenhar_labirinto(surface, labirinto, offset_x, offset_y):
         for x, celula in enumerate(linha):
             # Desenha a saída (célula 3) com a cor do destino para ser visível desde o início
             if celula == 3:
-                 cor = COR_DESTINO
+                  cor = COR_DESTINO
             # Mantém a lógica anterior para paredes e caminhos
             elif celula == 1:
                 cor = COR_PAREDE
@@ -121,7 +123,7 @@ def desenhar_passos(surface, iteracao_historico, offset_x, offset_y, inicio, fim
     # para que fiquem sempre visíveis como referência.
     iy, ix = inicio
     pygame.draw.rect(surface, COR_INICIO, (offset_x + ix * TAMANHO_CELULA, offset_y + iy * TAMANHO_CELULA, TAMANHO_CELULA, TAMANHO_CELULA))
-    
+
     fy, fx = fim
     pygame.draw.rect(surface, COR_DESTINO, (offset_x + fx * TAMANHO_CELULA, offset_y + fy * TAMANHO_CELULA, TAMANHO_CELULA, TAMANHO_CELULA))
 
@@ -140,28 +142,33 @@ def desenhar_passos(surface, iteracao_historico, offset_x, offset_y, inicio, fim
 def main():
     clock = pygame.time.Clock()
     running = True
-    estado_app = "AGUARDANDO"  # AGUARDANDO -> COMPUTANDO -> ANIMANDO -> FINALIZADO
-    
+    # ### MODIFICADO: Adicionado o estado "PAUSADO"
+    estado_app = "AGUARDANDO"  # AGUARDANDO -> COMPUTANDO -> ANIMANDO -> PAUSADO -> FINALIZADO
+
     algoritmos = {
         "DFS": algoritmo_dfs,
         "BFS": algoritmo_bfs,
         "STUB": algoritmo_stub
     }
     threads = []
-    
+
     indice_animacao = 0
     tempo_animacao = 0
-    velocidade_animacao = 0.00002 # segundos por passo
+    velocidade_animacao = 0.02 # segundos por passo (velocidade ajustada para melhor visualização)
 
     botao_start_rect = pygame.Rect(LARGURA_TELA / 2 - 100, ALTURA_TELA / 2 - 25, 200, 50)
+    # ### NOVO: Definição mais centralizada e maior para o botão de pausa
+    botao_pause_rect = pygame.Rect(LARGURA_TELA / 2 - 75, 15, 150, 40)
+
 
     while running:
-        # Tratamento de eventos
+        # ### MODIFICADO: Loop de eventos para lidar com o estado de PAUSA
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-            if event.type == pygame.MOUSEBUTTONDOWN and estado_app == "AGUARDANDO":
-                if botao_start_rect.collidepoint(event.pos):
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if estado_app == "AGUARDANDO" and botao_start_rect.collidepoint(event.pos):
                     estado_app = "COMPUTANDO"
                     print("--- Iniciando Computação ---")
                     # Criar e iniciar as threads
@@ -169,6 +176,17 @@ def main():
                         thread = threading.Thread(target=executar_algoritmo, args=(func, nome, LABIRINTO_GLOBAL, PONTO_INICIAL, PONTO_FINAL))
                         threads.append(thread)
                         thread.start()
+                
+                # ### NOVO: Lógica para pausar/retomar a animação
+                # Verifica se o clique foi no botão de pausa e se o estado é apropriado
+                elif estado_app in ["ANIMANDO", "PAUSADO"] and botao_pause_rect.collidepoint(event.pos):
+                    if estado_app == "ANIMANDO":
+                        estado_app = "PAUSADO"
+                        print("--- Animação Pausada ---")
+                    else: # estado_app é "PAUSADO"
+                        estado_app = "ANIMANDO"
+                        print("--- Animação Retomada ---")
+
 
         # Lógica de atualização de estado
         if estado_app == "COMPUTANDO":
@@ -176,18 +194,19 @@ def main():
             if not any(t.is_alive() for t in threads):
                 print("--- Computação Finalizada ---")
                 estado_app = "ANIMANDO"
-        
+
+        # ### MODIFICADO: A lógica de animação SÓ avança se o estado for "ANIMANDO"
         elif estado_app == "ANIMANDO":
             tempo_animacao += clock.get_time() / 1000.0
             if tempo_animacao > velocidade_animacao:
                 indice_animacao += 1
                 tempo_animacao = 0
-            
+
             # Verifica se todas as animações terminaram
             # Adicionado um tratamento de erro para caso um histórico esteja vazio
             if resultados:
-                max_len = max(len(res["historico"]) for res in resultados.values() if res["historico"])
-                if indice_animacao >= max_len:
+                max_len = max((len(res["historico"]) for res in resultados.values() if res["historico"]), default=0)
+                if max_len > 0 and indice_animacao >= max_len:
                     estado_app = "FINALIZADO"
                     indice_animacao = max_len -1 # Trava no último frame
 
@@ -197,50 +216,75 @@ def main():
         if estado_app == "AGUARDANDO":
             texto_surf = fonte_status.render("Clique para Iniciar", True, COR_TEXTO)
             texto_rect = texto_surf.get_rect(center=(LARGURA_TELA/2, ALTURA_TELA/2 - 50))
-            
+
             mouse_pos = pygame.mouse.get_pos()
             cor_botao_atual = COR_BOTAO_HOVER if botao_start_rect.collidepoint(mouse_pos) else COR_BOTAO
-            
+
             pygame.draw.rect(screen, cor_botao_atual, botao_start_rect)
             botao_texto_surf = fonte_titulo.render("START", True, COR_TEXTO)
             botao_texto_rect = botao_texto_surf.get_rect(center=botao_start_rect.center)
             screen.blit(texto_surf, texto_rect)
             screen.blit(botao_texto_surf, botao_texto_rect)
-        
+
         elif estado_app == "COMPUTANDO":
             texto_surf = fonte_status.render("Calculando rotas...", True, COR_TEXTO)
             texto_rect = texto_surf.get_rect(center=(LARGURA_TELA/2, ALTURA_TELA/2))
             screen.blit(texto_surf, texto_rect)
 
-        elif estado_app == "ANIMANDO" or estado_app == "FINALIZADO":
+        # ### MODIFICADO: Agrupados estados de desenho. PAUSADO desenha o mesmo frame, mas não avança.
+        elif estado_app in ["ANIMANDO", "PAUSADO", "FINALIZADO"]:
             offsets_x = [0, LARGURA_LABIRINTO_TELA, LARGURA_LABIRINTO_TELA * 2]
-            
+
             for i, nome in enumerate(algoritmos.keys()):
                 offset_x = offsets_x[i] + MARGEM_ESQUERDA
-                offset_y = MARGEM_ESQUERDA + (ALTURA_TELA/2 - (ALTURA_TELA/2 - (ALTURA_LABIRINTO*2.5))) # Espaço para o título
+                offset_y = 115 # Espaço para o título e botão de pausa
 
                 # Desenha o título e o tempo de execução
                 titulo_surf = fonte_titulo.render(nome, True, COR_TEXTO)
-                screen.blit(titulo_surf, (offset_x, MARGEM_ESQUERDA))
-                
+                screen.blit(titulo_surf, (offset_x, 65))
+
                 tempo = resultados[nome]['tempo']
                 tempo_surf = fonte_padrao.render(f"Tempo: {tempo:.4f}s", True, COR_TEXTO)
-                screen.blit(tempo_surf, (offset_x, MARGEM_ESQUERDA + 25))
+                screen.blit(tempo_surf, (offset_x, 65 + 25))
 
                 # Desenha o labirinto base
                 desenhar_labirinto(screen, LABIRINTO_GLOBAL, offset_x, offset_y)
-                
+
                 # Desenha os passos do algoritmo
                 historico_atual = resultados[nome]["historico"]
                 if historico_atual: # Garante que o histórico não está vazio
                     passo_atual = min(indice_animacao, len(historico_atual) - 1)
-                    
+
                     caminho_final = []
                     if estado_app == "FINALIZADO":
                         caminho_final = resultados[nome]["caminho_final"]
 
-                    ### MODIFICADO: Passa PONTO_INICIAL e PONTO_FINAL para a função de desenho ###
                     desenhar_passos(screen, historico_atual[passo_atual], offset_x, offset_y, PONTO_INICIAL, PONTO_FINAL, caminho_final)
+            
+            # ### NOVO: Lógica para desenhar o botão de Pausa/Retomar e o overlay de pausa
+            mouse_pos = pygame.mouse.get_pos()
+
+            if estado_app == "PAUSADO":
+                # Desenha uma camada semi-transparente sobre toda a tela
+                overlay = pygame.Surface((LARGURA_TELA, ALTURA_TELA), pygame.SRCALPHA)
+                overlay.fill((0, 0, 0, 180)) # Preto com alpha
+                screen.blit(overlay, (0, 0))
+                
+                # Desenha o texto "PAUSADO" no centro
+                texto_pausa_surf = fonte_status.render("PAUSADO", True, COR_TEXTO)
+                texto_pausa_rect = texto_pausa_surf.get_rect(center=(LARGURA_TELA / 2, ALTURA_TELA / 2))
+                screen.blit(texto_pausa_surf, texto_pausa_rect)
+
+            # O botão é desenhado em ambos os estados (ANIMANDO e PAUSADO)
+            if estado_app in ["ANIMANDO", "PAUSADO"]:
+                cor_botao_atual = COR_BOTAO_PAUSA_HOVER if botao_pause_rect.collidepoint(mouse_pos) else COR_BOTAO_PAUSA
+                pygame.draw.rect(screen, cor_botao_atual, botao_pause_rect)
+                
+                texto_botao = "RETOMAR" if estado_app == "PAUSADO" else "PAUSAR"
+                botao_texto_surf = fonte_titulo.render(texto_botao, True, COR_TEXTO)
+                botao_texto_rect = botao_texto_surf.get_rect(center=botao_pause_rect.center)
+                screen.blit(botao_texto_surf, botao_texto_rect)
+
 
         pygame.display.flip()
         clock.tick(60)
