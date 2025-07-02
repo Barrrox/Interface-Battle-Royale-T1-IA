@@ -43,8 +43,9 @@ guarda 3 algoritmos para fins de testes
 5. O labirinto pode ter tamanho variável
 6. Os algoritmos não podem analisar ou andar na diagonal.
 7. O labirinto terá paredes para delimitação.
-8. Interface
+8. Interface e animação
     1. Utilizar Pygame
+    2. A animação será produzida após a execução dos algoritmos
 
 # Matriz histórico
 
