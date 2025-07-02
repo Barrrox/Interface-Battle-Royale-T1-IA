@@ -6,21 +6,23 @@ from gerador_labirinto import gerar_labirinto_kruskal
 
 
 # Configurações de imagem
-LARGURA_TELA = 1290  # Múltiplo de 3 para divisão exata
-ALTURA_TELA = 821
+LARGURA_TELA = 1551 
+ALTURA_TELA = 801
 
 MARGEM_ESQUERDA = 20
 
 # Configurações do labirinto
-LARGURA_LABIRINTO = 5
-ALTURA_LABIRINTO = 5
-TAMANHO_CELULA = 5
+LARGURA_LABIRINTO = 100
+ALTURA_LABIRINTO = 100
+TAMANHO_CELULA = 2
 
+# Valores dos elementos na matriz do labirinto
 CAMINHO = 0
 PAREDE = 1
 INICIO = 2
 FIM = 3
 
+# Matriz do labirinto gerada por Kruskal
 LABIRINTO_GLOBAL = gerar_labirinto_kruskal(LARGURA_LABIRINTO, ALTURA_LABIRINTO)
 
 # PONTO INICIAL
