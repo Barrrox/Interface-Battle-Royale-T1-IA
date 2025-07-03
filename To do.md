@@ -4,6 +4,7 @@
 - [X] Alterar a parte da matriz-historico para não retornar o historico completo na ultima iteração
     - [X] Por que não ta funcionando mesmo que a posição atual passe pelo fim?
     - [X] bem na vdd o alg de teste não precisa chegar ao fim, ent tanto faz...
+    - [X] A n, esquece eu tava verificando um labirinto local em vez do global
 - [ ] Implementar contador de casas visitadas
 - [num vai dar] ~~Alterar o código para excluir o 2*i + 1 na criação do labirinto~~
 - [X] Adicionar Pause
