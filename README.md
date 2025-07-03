@@ -47,6 +47,9 @@ guarda 3 algoritmos para fins de testes
 8. Interface e animação
     1. Utilizar Pygame
     2. A animação será produzida após a execução dos algoritmos
+9. Verificação de percurso:
+    1. Cada historico será analisado. Para cada posição atual (x,y), a proxima deve estar entre as posições alcançaveis (x - 1, y), (x, y - 1), (x + 1, y), (x, y + 1)
+    2. Se alguma célula for pulada, o percurso não é válido.
 
 # Matriz histórico
 
