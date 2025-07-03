@@ -267,7 +267,7 @@ def main():
             if estado_app == "PAUSADO":
                 # Desenha uma camada semi-transparente sobre toda a tela
                 overlay = pygame.Surface((LARGURA_TELA, ALTURA_TELA), pygame.SRCALPHA)
-                overlay.fill((0, 0, 0, 180)) # Preto com alpha
+                overlay.fill((0, 0, 0, 50)) # Preto com alpha
                 screen.blit(overlay, (0, 0))
                 
                 # Desenha o texto "PAUSADO" no centro
