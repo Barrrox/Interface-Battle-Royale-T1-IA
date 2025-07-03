@@ -105,7 +105,7 @@ def gerar_labirinto_kruskal(width, height):
 
     # --- Passo 4: Definir a entrada e a saída ---
     # Entrada (valor 2) na parede superior esquerda
-    labirinto_matriz[1:1+1, 1] = INICIO
+    labirinto_matriz[1, 1] = INICIO
 
     # Saída (valor 3)
     # A saída estará em um dos dois:
@@ -130,7 +130,7 @@ def gerar_labirinto_kruskal(width, height):
 
     # Caso extremo: se nenhuma saída for criada (ex: labirinto 1x1), força uma
     if not exit_created:
-        labirinto_matriz[-1, -1-1:-1] = FIM
+        labirinto_matriz[-1, -2] = FIM
         
     return labirinto_matriz
 
