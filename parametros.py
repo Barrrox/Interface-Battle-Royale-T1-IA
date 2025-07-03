@@ -16,8 +16,8 @@ MARGEM_ESQUERDA = 20
 # Os valores de altura e largura serão duplicados e incrementados em 1.
 # Ex: se a LARGURA_LABIRINTO = 10, então o labirinto terá tamanho 10*2 + 1 = 21
 # (Eu (Barros) tentei deixar o valor daqui ser diretamente o tamanho do labirinto mas num deu nao)
-LARGURA_LABIRINTO = 10
-ALTURA_LABIRINTO = 10
+LARGURA_LABIRINTO = 6
+ALTURA_LABIRINTO = 6
 TAMANHO_CELULA = 5
 
 # Valores dos elementos na matriz do labirinto
@@ -30,7 +30,7 @@ FIM = 3
 LABIRINTO_GLOBAL = gerar_labirinto_kruskal(LARGURA_LABIRINTO, ALTURA_LABIRINTO)
 
 # PONTO INICIAL
-PONTO_INICIAL = (1,0)
+PONTO_INICIAL = (1,1)
 
 # PONTO FINAL NA PAREDE INFERIOR
 for i in range(len(LABIRINTO_GLOBAL)):
