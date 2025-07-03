@@ -41,7 +41,8 @@ guarda 3 algoritmos para fins de testes
         3. Ponto de início = 2
         4. Ponto de fim = 3
 5. O labirinto pode ter tamanho variável
-6. Os algoritmos não podem analisar ou andar na diagonal.
+6. Os algoritmos não podem andar na diagonal nem pular celulas.
+    1. Mas podem analisar qualquer célula do labirinto
 7. O labirinto terá paredes para delimitação.
 8. Interface e animação
     1. Utilizar Pygame
