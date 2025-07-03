@@ -12,9 +12,13 @@ ALTURA_TELA = 801
 MARGEM_ESQUERDA = 20
 
 # Configurações do labirinto
-LARGURA_LABIRINTO = 100
-ALTURA_LABIRINTO = 100
-TAMANHO_CELULA = 2
+
+# Os valores de altura e largura serão duplicados e incrementados em 1.
+# Ex: se a LARGURA_LABIRINTO = 10, então o labirinto terá tamanho 10*2 + 1 = 21
+# (Eu (Barros) tentei deixar o valor daqui ser diretamente o tamanho do labirinto mas num deu nao)
+LARGURA_LABIRINTO = 10
+ALTURA_LABIRINTO = 10
+TAMANHO_CELULA = 5
 
 # Valores dos elementos na matriz do labirinto
 CAMINHO = 0
