@@ -1,7 +1,9 @@
 # TO DO
 
 - [X] Alterar o código da interface para receber corretamente a matriz-historico que cada algoritmo deve retornar
-- [ ] Alterar a parte da matriz-historico para não retornar o historico completo na ultima iteração
+- [X] Alterar a parte da matriz-historico para não retornar o historico completo na ultima iteração
+    - [X] Por que não ta funcionando mesmo que a posição atual passe pelo fim?
+    - [X] bem na vdd o alg de teste não precisa chegar ao fim, ent tanto faz...
 - [ ] Implementar contador de casas visitadas
 - [num vai dar] ~~Alterar o código para excluir o 2*i + 1 na criação do labirinto~~
 - [X] Adicionar Pause
