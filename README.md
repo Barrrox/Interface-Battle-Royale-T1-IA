@@ -26,9 +26,8 @@ guarda 3 algoritmos para fins de testes
 
 # Decisões de projeto:
 
-1. Cada algoritmo é uma biblioteca e a interface é a main. Cada grupo deve criar uma função que recebe como parâmetro o labirinto e retornar uma matriz-histórico (será explicado mais a frente nesse documento).
+1. Cada algoritmo é uma biblioteca e a interface é a main. Cada grupo deve criar uma função que recebe como parâmetro o labirinto e retornar um histórico(lista do python) do percurso feito pelo seu algoritmo (será explicado mais a frente nesse documento).
 2. Posição inicial e final: O começo será fixo na posição (1,1) mas a saída do labirinto será aleatóriazada m uma posição adjacente às paredes limitadoras de labirinto do quarto quadrante (canto inferior direito). Se temos um labirinto i x j, o fim pode estar entre [int(i/2), j - 1] e [i-2, j-1] ou [int(j/2), i - 1] e [j-2, i-1]
-
 3. Tamanhos dos labirintos: 
     L1: 71x71 (pedro/roberto)
     L2: 21x21 (hermes/rafael)
@@ -51,19 +50,8 @@ guarda 3 algoritmos para fins de testes
     1. Cada historico será analisado. Para cada posição atual (x,y), a proxima deve estar entre as posições alcançaveis (x - 1, y), (x, y - 1), (x + 1, y), (x, y + 1)
     2. Se alguma célula for pulada, o percurso não é válido.
 
-# Matriz histórico
+# Descrição do histórico
 
-A matriz-histórico é uma matriz uma matriz com n linhas. Cada linha deve conter um array com m tuplas. A primeira tupla de cada iteração i (matriz[i][0]) deve conter a posição atual do algoritmo para aquela iteração i. As m - 1 tuplas seguintes devem conter as celulas visitadas pelo algoritmo naquela iteração.
-Essa matriz é necessária para a plotagem do labirinto e não vai influenciar na execução do código.
-
-```python
-matriz = [
-    [(0,0),(0,1),(1,0)], # i = 0
-    [(0,1),(1,1),(0,2)], # i = 1
-    [(1,1),(2,1),(1,2)], # i = 2
-    [(2,1)],             # i = 3, beco sem saída, voltar a (1,1)
-    [(1,2),(1,2)], # i = 4
-    [(2,2)]              # i = 5, fim
-]
-```
+O histórico é uma lista com n linhas. Cada elemento da lista deve ser uma tupla (x,y) que indica a posição visitada pelo algoritmo naquela iteração. Ao final, o histórico deve conter todas as células visitadas naquele algoritmo e não apenas o caminho final (lembre-se de que célula visitada é diferente de célula analisada)
+Essa matriz é necessária para a animação do labirinto e não vai influenciar na execução do código.
 
