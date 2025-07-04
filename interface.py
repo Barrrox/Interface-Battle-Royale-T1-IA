@@ -11,6 +11,7 @@ import time
 import parametros
 # Supondo que estes arquivos existam e funcionem como discutido anteriormente
 from algoritmos_teste import *
+from caminho_final import *
 
 
 # --- 1. CONFIGURAÇÕES GERAIS E CORES ---
@@ -70,7 +71,7 @@ PONTO_FINAL = parametros.PONTO_FINAL
 # --- 4. LÓGICA DE THREADING E EXECUÇÃO ---
 resultados = {}
 
-def executar_algoritmo(func_algoritmo, nome, labirinto, inicio, fim):
+def executar_algoritmo(func_algoritmo, nome, labirinto, inicio, fim, caminho_final):
     """Função alvo da thread: executa um algoritmo e mede o tempo."""
     print(f"Thread '{nome}' iniciada.")
     tempo_inicial = time.perf_counter()
@@ -80,11 +81,8 @@ def executar_algoritmo(func_algoritmo, nome, labirinto, inicio, fim):
     resultados[nome] = {
         "historico": matriz_historico,
         "tempo": tempo_final - tempo_inicial,
-        "caminho_final": []
+        "caminho_final": caminho_final
     }
-    # Se o caminho foi encontrado, a última entrada do histórico tem o caminho
-    if matriz_historico and matriz_historico[-1][0] == fim:
-        resultados[nome]["caminho_final"] = matriz_historico[-1][1:]
 
     print(f"Thread '{nome}' finalizada em {resultados[nome]['tempo']:.4f}s.")
 
@@ -144,7 +142,7 @@ def main():
     algoritmos = {
         "DFS": algoritmo_dfs,
         "BFS": algoritmo_bfs,
-        "STUB": algoritmo_stub
+        "DEAD END FILL": algoritmo_dead_end_filling
     }
     threads = []
 
@@ -156,6 +154,7 @@ def main():
     # ### NOVO: Definição mais centralizada e maior para o botão de pausa
     botao_pause_rect = pygame.Rect(LARGURA_TELA / 2 - 75, 15, 150, 40)
 
+    caminho_final = algoritmo_dead_end_filling(LABIRINTO_GLOBAL, PONTO_INICIAL, PONTO_FINAL)
 
     while running:
         # ### MODIFICADO: Loop de eventos para lidar com o estado de PAUSA
@@ -169,7 +168,7 @@ def main():
                     print("--- Iniciando Computação ---")
                     # Criar e iniciar as threads
                     for nome, func in algoritmos.items():
-                        thread = threading.Thread(target=executar_algoritmo, args=(func, nome, LABIRINTO_GLOBAL, PONTO_INICIAL, PONTO_FINAL))
+                        thread = threading.Thread(target=executar_algoritmo, args=(func, nome, LABIRINTO_GLOBAL, PONTO_INICIAL, PONTO_FINAL, caminho_final))
                         threads.append(thread)
                         thread.start()
                 
@@ -227,7 +226,7 @@ def main():
             texto_rect = texto_surf.get_rect(center=(LARGURA_TELA/2, ALTURA_TELA/2))
             screen.blit(texto_surf, texto_rect)
 
-        # ### MODIFICADO: Agrupados estados de desenho. PAUSADO desenha o mesmo frame, mas não avança.
+        # ### Estados de desenho. Pause desenha o mesmo frame mas não avança
         elif estado_app in ["ANIMANDO", "PAUSADO", "FINALIZADO"]:
             offsets_x = [0, LARGURA_LABIRINTO_TELA, LARGURA_LABIRINTO_TELA * 2]
 
@@ -256,8 +255,7 @@ def main():
                         caminho_final = resultados[nome]["caminho_final"]
 
                     desenhar_passos(screen, historico_atual[:passo_atual], offset_x, offset_y, PONTO_INICIAL, PONTO_FINAL, caminho_final)
-            
-            # ### NOVO: Lógica para desenhar o botão de Pausa/Retomar e o overlay de pausa
+        
             mouse_pos = pygame.mouse.get_pos()
 
             if estado_app == "PAUSADO":
