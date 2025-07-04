@@ -10,6 +10,3 @@
 - [num vai dar] ~~Alterar o código para excluir o 2*i + 1 na criação do labirinto~~
 - [X] Adicionar Pause
 - [ ] Medir diferença de tempo entre os algoritmos com a utilização da matriz-historico e os algoritmos limpos (para fins de testes)
-- [ ] Verificador de percurso:
-    1. Verifica cada historico analisando para cada posição atual (x,y) se a proxima está entre as posições alcançaveis (x - 1, y), (x, y - 1), (x + 1, y), (x, y + 1)
-    2. Se alguma célula for pulada, o percurso não é válido.
