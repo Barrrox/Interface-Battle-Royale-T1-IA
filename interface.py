@@ -1,16 +1,13 @@
 """
-Código cópia criado a partir do arquivo interface_gemini.py
+Interface para animar os 3 algoritmos de busca
 
 Alterações feitas por Barros e Pedro
-
-### MODIFICADO: Adicionado estado de PAUSA por Gemini ###
 """
 
 
 import pygame
 import threading
 import time
-import random
 import parametros
 # Supondo que estes arquivos existam e funcionem como discutido anteriormente
 from algoritmos_teste import *
@@ -107,7 +104,6 @@ def desenhar_labirinto(surface, labirinto, offset_x, offset_y):
                 cor = COR_CAMINHO
             pygame.draw.rect(surface, cor, (offset_x + x * TAMANHO_CELULA, offset_y + y * TAMANHO_CELULA, TAMANHO_CELULA, TAMANHO_CELULA))
 
-### MODIFICADO: A função agora aceita `inicio` e `fim` como parâmetros ###
 def desenhar_passos(surface, iteracao_historico, offset_x, offset_y, inicio, fim, caminho_final=[]):
     """Desenha o estado dinâmico (passos do algoritmo) sobre o labirinto."""
     if not iteracao_historico:
@@ -154,7 +150,7 @@ def main():
 
     indice_animacao = 0
     tempo_animacao = 0
-    velocidade_animacao = 0.02 # segundos por passo (velocidade ajustada para melhor visualização)
+    velocidade_animacao = parametros.VELOCIDADE_ANIMACAO # segundos por passo (velocidade ajustada para melhor visualização)
 
     botao_start_rect = pygame.Rect(LARGURA_TELA / 2 - 100, ALTURA_TELA / 2 - 25, 200, 50)
     # ### NOVO: Definição mais centralizada e maior para o botão de pausa
@@ -259,7 +255,7 @@ def main():
                     if estado_app == "FINALIZADO":
                         caminho_final = resultados[nome]["caminho_final"]
 
-                    desenhar_passos(screen, historico_atual[passo_atual], offset_x, offset_y, PONTO_INICIAL, PONTO_FINAL, caminho_final)
+                    desenhar_passos(screen, historico_atual[:passo_atual], offset_x, offset_y, PONTO_INICIAL, PONTO_FINAL, caminho_final)
             
             # ### NOVO: Lógica para desenhar o botão de Pausa/Retomar e o overlay de pausa
             mouse_pos = pygame.mouse.get_pos()

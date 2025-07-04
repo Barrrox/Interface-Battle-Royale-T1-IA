@@ -1,13 +1,7 @@
 """
-O arquivo contém os algoritmos criados pelo gemini para testas a interface
-
+Código com os algoritmos teste usados durante implementação da interface
 """
-
 import random
-import time
-
-# --- 3. IMPLEMENTAÇÃO DOS ALGORITMOS ---
-# Cada algoritmo retorna a matriz de histórico conforme especificado.
 
 def algoritmo_dfs(labirinto, inicio, fim):
     """Busca em Profundidade (Depth-First Search)"""
@@ -21,11 +15,10 @@ def algoritmo_dfs(labirinto, inicio, fim):
         
         # Adiciona a iteração ao histórico no formato pedido
         # (posição atual, células visitadas na iteração) - aqui, visitados é o conjunto total até agora
-        historico.append([pos_atual] + list(visitados))
+        historico.append(pos_atual)
         
         if pos_atual == fim:
             print("SUCESSO!")
-            historico.append([pos_atual] + list(caminho_parcial)) # Frame final com o caminho
             return historico # Sucesso
         
         (y, x) = pos_atual
@@ -37,8 +30,10 @@ def algoritmo_dfs(labirinto, inicio, fim):
             if 0 <= vy < len(labirinto) and 0 <= vx < len(labirinto[0]) and labirinto[vy][vx] != 1 and vizinho not in visitados:
                 visitados.add(vizinho)
                 pilha.append((vizinho, caminho_parcial + [vizinho]))
-
+    
+    print("FALHA!")
     return historico # Falha
+
 
 def algoritmo_bfs(labirinto, inicio, fim):
     """Busca em Largura (Breadth-First Search)"""
@@ -47,12 +42,14 @@ def algoritmo_bfs(labirinto, inicio, fim):
     visitados = set([inicio])
     
     while fila:
-        (pos_atual, caminho_parcial) = fila.pop(0) # A única diferença do DFS: .pop(0)
+        (pos_atual, caminho_parcial) = fila.pop(0)
         
-        historico.append([pos_atual] + list(visitados))
+        # Alteração: Adiciona apenas a posição atual (tupla) ao histórico
+        historico.append(pos_atual)
         
         if pos_atual == fim:
-            historico.append([pos_atual] + list(caminho_parcial))
+            # Alteração: Remove o append extra do caminho, pois o objetivo é retornar
+            # apenas as posições visitadas. A posição final já foi adicionada acima.
             return historico
 
         (y, x) = pos_atual
@@ -73,7 +70,8 @@ def algoritmo_stub(labirinto, inicio, fim):
     visitados = set([inicio])
     
     while pos_atual != fim:
-        historico.append([pos_atual] + list(visitados))
+        # Alteração: Adiciona apenas a posição atual (tupla) ao histórico
+        historico.append(pos_atual)
         (y, x) = pos_atual
         
         # Move-se na diagonal, se possível, de forma ineficiente
@@ -85,8 +83,7 @@ def algoritmo_stub(labirinto, inicio, fim):
             break
             
         pos_atual = (y, x)
-        visitados.add(pos_atual)
-        time.sleep(0.01) # Simula um algoritmo mais lento
 
-    historico.append([pos_atual] + list(visitados))
+    # Alteração: Adiciona a posição final (ou a última posição antes de parar) ao histórico
+    historico.append(pos_atual)
     return historico
