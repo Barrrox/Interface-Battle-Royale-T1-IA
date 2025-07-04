@@ -75,12 +75,16 @@ def executar_algoritmo(func_algoritmo, nome, labirinto, inicio, fim, caminho_fin
     """Função alvo da thread: executa um algoritmo e mede o tempo."""
     print(f"Thread '{nome}' iniciada.")
     tempo_inicial = time.perf_counter()
-    matriz_historico = func_algoritmo(labirinto, inicio, fim)
+    historico = func_algoritmo(labirinto, inicio, fim)
     tempo_final = time.perf_counter()
 
+    # numero de celulas visitadas
+    n_celulas_visitadas = len(historico)
+
     resultados[nome] = {
-        "historico": matriz_historico,
+        "historico": historico,
         "tempo": tempo_final - tempo_inicial,
+        "numero de celulas visitadas": n_celulas_visitadas,
         "caminho_final": caminho_final
     }
 
@@ -232,7 +236,7 @@ def main():
 
             for i, nome in enumerate(algoritmos.keys()):
                 offset_x = offsets_x[i] + MARGEM_ESQUERDA
-                offset_y = 115 # Espaço para o título e botão de pausa
+                offset_y = 140 # Espaço para o título e botão de pausa
 
                 # Desenha o título e o tempo de execução
                 titulo_surf = fonte_titulo.render(nome, True, COR_TEXTO)
@@ -241,6 +245,10 @@ def main():
                 tempo = resultados[nome]['tempo']
                 tempo_surf = fonte_padrao.render(f"Tempo: {tempo:.4f}s", True, COR_TEXTO)
                 screen.blit(tempo_surf, (offset_x, 65 + 25))
+
+                n_cell_visitadas = resultados[nome]['numero de celulas visitadas']
+                tempo_surf = fonte_padrao.render(f"Celulas visitadas: {n_cell_visitadas}", True, COR_TEXTO)
+                screen.blit(tempo_surf, (offset_x, 65 + 25 + 25))
 
                 # Desenha o labirinto base
                 desenhar_labirinto(screen, LABIRINTO_GLOBAL, offset_x, offset_y)
