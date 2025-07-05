@@ -32,7 +32,7 @@ MARGEM_ESQUERDA = parametros.MARGEM_ESQUERDA
 
 # Cores
 COR_FUNDO = (0, 0, 0) # Preto
-COR_PAREDE = (139, 69, 19) # Marrom
+COR_PAREDE = (100, 30, 19) # Marrom
 COR_CAMINHO = (255, 255, 255) # Branco
 COR_VISITADA = (173, 216, 230) # Azul claro
 COR_POS_ATUAL = (0, 255, 0) # Verde

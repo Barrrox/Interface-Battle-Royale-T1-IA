@@ -18,7 +18,6 @@ def algoritmo_dfs(labirinto, inicio, fim):
         historico.append(pos_atual)
         
         if pos_atual == fim:
-            print("SUCESSO!")
             return historico # Sucesso
         
         (y, x) = pos_atual
