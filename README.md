@@ -4,7 +4,7 @@ Repositório para a interface da competição de algoritmos de busca em um labir
 
 Autores: Matheus Barros, Pedro Lucas
 
-Apoio: Silva, Lora, Roberto
+Apoio: Silva, Lora, Roberto, Hermes, Andre
 
 # Explicação dos arquivos desse repositório
 
@@ -24,10 +24,14 @@ Tem o algoritmo de Kruskal para gerar labirinto
 
 guarda 3 algoritmos para fins de testes
 
+### caminho_final.py
+
+Contém um algoritmo separado dos outros que serve apenas para gerar o caminho final
+
 # Decisões de projeto:
 
-1. Cada algoritmo é uma biblioteca e a interface é a main. Cada grupo deve criar uma função que recebe como parâmetro o labirinto e retornar um histórico(lista do python) do percurso feito pelo seu algoritmo (será explicado mais a frente nesse documento).
-2. Posição inicial e final: O começo será fixo na posição (1,1) mas a saída do labirinto será aleatóriazada m uma posição adjacente às paredes limitadoras de labirinto do quarto quadrante (canto inferior direito). Se temos um labirinto i x j, o fim pode estar entre [int(i/2), j - 1] e [i-2, j-1] ou [int(j/2), i - 1] e [j-2, i-1]
+1. Cada grupo deve criar uma função que recebe como parâmetro o labirinto e retornar um histórico(lista do python) do percurso feito pelo seu algoritmo (será explicado mais a frente nesse documento).
+2. Posição inicial e final: O começo será fixo na posição (1,1) mas a saída do labirinto será aleatóriazada em uma posição adjacente às paredes limitadoras de labirinto do quarto quadrante (canto inferior direito). Se temos um labirinto i x j, o fim pode estar entre [int(i/2), j - 1] e [i-2, j-1] ou [int(j/2), i - 1] e [j-2, i-1]
 3. Tamanhos dos labirintos: 
     L1: 71x71 (pedro/roberto)
     L2: 21x21 (hermes/rafael)
@@ -39,19 +43,15 @@ guarda 3 algoritmos para fins de testes
         2. Parede = 1
         3. Ponto de início = 2
         4. Ponto de fim = 3
-5. O labirinto pode ter tamanho variável
-6. Os algoritmos não podem andar na diagonal nem pular celulas.
-    1. Mas podem analisar qualquer célula do labirinto
+5. O labirinto pode ter tamanho variável.
+6. Analisar celulas também conta como um passo 
 7. O labirinto terá paredes para delimitação.
 8. Interface e animação
-    1. Utilizar Pygame
+    1. Será utilizada a biblioteca Pygame
     2. A animação será produzida após a execução dos algoritmos
-9. Verificação de percurso:
-    1. Cada historico será analisado. Para cada posição atual (x,y), a proxima deve estar entre as posições alcançaveis (x - 1, y), (x, y - 1), (x + 1, y), (x, y + 1)
-    2. Se alguma célula for pulada, o percurso não é válido.
 
 # Descrição do histórico
 
-O histórico é uma lista com n linhas. Cada elemento da lista deve ser uma tupla (x,y) que indica a posição visitada pelo algoritmo naquela iteração. Ao final, o histórico deve conter todas as células visitadas naquele algoritmo e não apenas o caminho final (lembre-se de que célula visitada é diferente de célula analisada)
-Essa matriz é necessária para a animação do labirinto e não vai influenciar na execução do código.
+O histórico é uma lista do python. Cada elemento da lista deve ser uma tupla (x,y) que indica a posição analisada pelo algoritmo naquela iteração. Ao final, o histórico deve conter todas as células visitadas/analisadas naquele algoritmo e não apenas o caminho final.
+Essa matriz é necessária para a animação do labirinto.
 
