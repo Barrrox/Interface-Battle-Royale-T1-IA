@@ -12,6 +12,7 @@ import parametros
 # Supondo que estes arquivos existam e funcionem como discutido anteriormente
 from algoritmos_teste import *
 from caminho_final import *
+import numpy as np
 
 
 # --- 1. CONFIGURAÇÕES GERAIS E CORES ---
@@ -78,14 +79,27 @@ def executar_algoritmo(func_algoritmo, nome, labirinto, inicio, fim, caminho_fin
     historico = func_algoritmo(labirinto, inicio, fim)
     tempo_final = time.perf_counter()
 
+    tempo = tempo_final - tempo_inicial
+
     # numero de celulas visitadas
     n_celulas_visitadas = len(historico)
 
+    # O multplicador é igual para todos e serve apenas para que os números de 
+    # pontuação tenham valores parecidos independente do tamanho do labirinto
+    multiplicador = 1000000/2.7**np.sqrt(LARGURA_LABIRINTO+ALTURA_LABIRINTO)
+
+    # Se quiser que o multplicador não interfira, descomente a linha abaixo
+    # multiplicador = 1
+
+    # Quanto menor, melhor
+    pontuacao = int(tempo*n_celulas_visitadas*multiplicador)
+
     resultados[nome] = {
         "historico": historico,
-        "tempo": tempo_final - tempo_inicial,
+        "tempo": tempo,
         "numero de celulas visitadas": n_celulas_visitadas,
-        "caminho_final": caminho_final
+        "caminho_final": caminho_final,
+        "pontuacao": pontuacao
     }
 
     print(f"Thread '{nome}' finalizada em {resultados[nome]['tempo']:.4f}s.")
@@ -236,7 +250,7 @@ def main():
 
             for i, nome in enumerate(algoritmos.keys()):
                 offset_x = offsets_x[i] + MARGEM_ESQUERDA
-                offset_y = 140 # Espaço para o título e botão de pausa
+                offset_y = 165 # Espaço para o título e botão de pausa
 
                 # Desenha o título e o tempo de execução
                 titulo_surf = fonte_titulo.render(nome, True, COR_TEXTO)
@@ -249,6 +263,10 @@ def main():
                 n_cell_visitadas = resultados[nome]['numero de celulas visitadas']
                 tempo_surf = fonte_padrao.render(f"Celulas visitadas: {n_cell_visitadas}", True, COR_TEXTO)
                 screen.blit(tempo_surf, (offset_x, 65 + 25 + 25))
+
+                pontuacao = resultados[nome]['pontuacao']
+                tempo_surf = fonte_padrao.render(f"Pontuação: {pontuacao}", True, COR_TEXTO)
+                screen.blit(tempo_surf, (offset_x, 65 + 25 + 25 + 25))
 
                 # Desenha o labirinto base
                 desenhar_labirinto(screen, LABIRINTO_GLOBAL, offset_x, offset_y)

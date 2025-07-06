@@ -55,3 +55,7 @@ Contém um algoritmo separado dos outros que serve apenas para gerar o caminho f
 O histórico é uma lista do python. Cada elemento da lista deve ser uma tupla (x,y) que indica a posição analisada pelo algoritmo naquela iteração. Ao final, o histórico deve conter todas as células visitadas/analisadas naquele algoritmo e não apenas o caminho final.
 Essa matriz é necessária para a animação do labirinto.
 
+# Pontuação
+
+A pontuação de cada algoritmo será calculada pela multiplicação dos valores de tempo de execução e celulas visitadas. Portanto quanto menor a pontuação, melhor
+
