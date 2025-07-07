@@ -10,8 +10,8 @@ import threading
 import time
 import parametros
 # Supondo que estes arquivos existam e funcionem como discutido anteriormente
-from algoritmos_teste_copy import *
-from caminho_final_copy import *
+from algoritmos_teste import *
+from caminho_final import *
 import numpy as np
 
 
