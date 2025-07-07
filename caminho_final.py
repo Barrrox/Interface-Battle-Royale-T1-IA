@@ -4,7 +4,7 @@ Implementa o algoritmo de dead end filling que retornará o percurso final para 
 
 """
 
-def algoritmo_dead_end_filling(labirinto, inicio, fim):
+def algoritmo_dead_end_filling(labirinto):
     """
     Resolve um labirinto usando o algoritmo Dead End Filling.
 
@@ -22,6 +22,21 @@ def algoritmo_dead_end_filling(labirinto, inicio, fim):
     O histórico retornado contém apenas as posições do caminho final,
     conforme solicitado.
     """
+
+    inicio = (1,1)
+
+    altura_labirinto = len(labirinto)
+    largura_labirinto = len(labirinto[0])
+    
+    for i in range(altura_labirinto):
+        if labirinto[i][-1] == 3:
+            fim = (i, largura_labirinto - 1)
+
+    for i in range(largura_labirinto):
+        if labirinto[-1][i] == 3:
+            fim = (altura_labirinto - 1, i)
+
+    print(fim)
     
     # Cria uma cópia mutável do labirinto para não alterar o original
     labirinto_copia = [list(linha) for linha in labirinto]
@@ -96,6 +111,18 @@ def algoritmo_dead_end_filling(labirinto, inicio, fim):
                 visitados.add(vizinho)
                 novo_caminho = caminho_parcial + [vizinho]
                 fila.append((vizinho, novo_caminho))
-                
+
+    print("Falha Dead-end-filling")
     # Se não encontrar caminho (improvável se houver solução)
     return []
+
+
+labirinto = [   [1, 1, 1, 1, 1, 1, 1],
+                [1, 2, 0, 0, 1, 0, 1],
+                [1, 1, 1, 0, 1, 0, 1],
+                [1, 0, 0, 0, 1, 0, 1],
+                [1, 1, 1, 0, 1, 0, 1],
+                [1, 0, 0, 0, 0, 0, 1],
+                [1, 1, 1, 3, 1, 1, 1]]
+
+algoritmo_dead_end_filling(labirinto)

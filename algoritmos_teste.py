@@ -3,8 +3,23 @@ Código com os algoritmos teste usados durante implementação da interface
 """
 import random
 
-def algoritmo_dfs(labirinto, inicio, fim):
+def algoritmo_dfs(labirinto):
     """Busca em Profundidade (Depth-First Search)"""
+    
+    inicio = (1,1)
+
+    altura_labirinto = len(labirinto)
+    largura_labirinto = len(labirinto[0])
+    
+    for i in range(altura_labirinto):
+        if labirinto[i][-1] == 3:
+            fim = (i, largura_labirinto - 1)
+
+    for i in range(largura_labirinto):
+        if labirinto[-1][i] == 3:
+            fim = (altura_labirinto - 1, i)
+    
+    
     historico = []
     pilha = [(inicio, [inicio])]
     visitados = set([inicio])
@@ -33,9 +48,31 @@ def algoritmo_dfs(labirinto, inicio, fim):
     print("FALHA!")
     return historico # Falha
 
+# labirinto = [[1,1,1,1,1],
+#              [1,1,1,1,3],
+#              [1,1,1,1,1],
+#              [1,1,1,1,1],
+#              [1,1,1,1,1],]
 
-def algoritmo_bfs(labirinto, inicio, fim):
+# print(algoritmo_dfs(labirinto))
+
+
+def algoritmo_bfs(labirinto):
     """Busca em Largura (Breadth-First Search)"""
+    
+    inicio = (1,1)
+
+    altura_labirinto = len(labirinto)
+    largura_labirinto = len(labirinto[0])
+    
+    for i in range(altura_labirinto):
+        if labirinto[i][-1] == 3:
+            fim = (i, largura_labirinto - 1)
+
+    for i in range(largura_labirinto):
+        if labirinto[-1][i] == 3:
+            fim = (altura_labirinto - 1, i)
+
     historico = []
     fila = [(inicio, [inicio])]
     visitados = set([inicio])
@@ -62,8 +99,23 @@ def algoritmo_bfs(labirinto, inicio, fim):
     
     return historico
 
-def algoritmo_stub(labirinto, inicio, fim):
+def algoritmo_stub(labirinto):
     """Um algoritmo 'bobo' para demonstração."""
+    
+    inicio = (1,1)
+
+    altura_labirinto = len(labirinto)
+    largura_labirinto = len(labirinto[0])
+    
+    for i in range(altura_labirinto):
+        if labirinto[i][-1] == 3:
+            fim = (i, largura_labirinto - 1)
+
+    for i in range(largura_labirinto):
+        if labirinto[-1][i] == 3:
+            fim = (altura_labirinto - 1, i)
+
+    
     historico = []
     pos_atual = inicio
     visitados = set([inicio])

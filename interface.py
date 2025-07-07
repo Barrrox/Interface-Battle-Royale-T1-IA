@@ -10,8 +10,8 @@ import threading
 import time
 import parametros
 # Supondo que estes arquivos existam e funcionem como discutido anteriormente
-from algoritmos_teste import *
-from caminho_final import *
+from algoritmos_teste_copy import *
+from caminho_final_copy import *
 import numpy as np
 
 
@@ -72,11 +72,11 @@ PONTO_FINAL = parametros.PONTO_FINAL
 # --- 4. LÓGICA DE THREADING E EXECUÇÃO ---
 resultados = {}
 
-def executar_algoritmo(func_algoritmo, nome, labirinto, inicio, fim, caminho_final):
+def executar_algoritmo(func_algoritmo, nome, labirinto, caminho_final):
     """Função alvo da thread: executa um algoritmo e mede o tempo."""
     print(f"Thread '{nome}' iniciada.")
     tempo_inicial = time.perf_counter()
-    historico = func_algoritmo(labirinto, inicio, fim)
+    historico = func_algoritmo(labirinto)
     tempo_final = time.perf_counter()
 
     tempo = tempo_final - tempo_inicial
@@ -176,7 +176,8 @@ def main():
     # ### NOVO: Definição mais centralizada e maior para o botão de pausa
     botao_pause_rect = pygame.Rect(LARGURA_TELA / 2 - 75, 15, 150, 40)
 
-    caminho_final = algoritmo_dead_end_filling(LABIRINTO_GLOBAL, PONTO_INICIAL, PONTO_FINAL)
+    print(LABIRINTO_GLOBAL)
+    caminho_final = algoritmo_dead_end_filling(LABIRINTO_GLOBAL)
 
     while running:
         # ### MODIFICADO: Loop de eventos para lidar com o estado de PAUSA
@@ -190,7 +191,7 @@ def main():
                     print("--- Iniciando Computação ---")
                     # Criar e iniciar as threads
                     for nome, func in algoritmos.items():
-                        thread = threading.Thread(target=executar_algoritmo, args=(func, nome, LABIRINTO_GLOBAL, PONTO_INICIAL, PONTO_FINAL, caminho_final))
+                        thread = threading.Thread(target=executar_algoritmo, args=(func, nome, LABIRINTO_GLOBAL, caminho_final))
                         threads.append(thread)
                         thread.start()
                 
