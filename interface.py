@@ -84,8 +84,12 @@ def executar_algoritmo(func_algoritmo, nome, labirinto, inicio, fim, caminho_fin
     # numero de celulas visitadas
     n_celulas_visitadas = len(historico)
 
-    # O multplicador é igual para todos e serve apenas para que os números de 
-    # pontuação tenham valores parecidos independente do tamanho do labirinto
+    # O multplicador é um número x que multiplica a pontuação.
+    # Ele serve apenas para que os números de pontuação tenham valores 
+    # parecidos entre cada rodada, independente do tamanho do labirinto.
+    # O valor multiplica todos os algoritmos sem mudar, então não vai impactar no
+    # ranking dos algoritmos.
+
     multiplicador = 1000000/2.7**np.sqrt(LARGURA_LABIRINTO+ALTURA_LABIRINTO)
 
     # Se quiser que o multplicador não interfira, descomente a linha abaixo

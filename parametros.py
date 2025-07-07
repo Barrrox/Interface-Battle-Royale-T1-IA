@@ -16,8 +16,8 @@ MARGEM_ESQUERDA = 20
 # Os valores de altura e largura serão duplicados e incrementados em 1.
 # Ex: se a LARGURA_LABIRINTO = 10, então o labirinto terá tamanho 10*2 + 1 = 21
 # (Eu (Barros) tentei deixar o valor daqui ser diretamente o tamanho do labirinto mas num deu nao)
-LARGURA_LABIRINTO = 22
-ALTURA_LABIRINTO = 22
+LARGURA_LABIRINTO = 11
+ALTURA_LABIRINTO = 15
 TAMANHO_CELULA = 5
 
 # Valores dos elementos na matriz do labirinto
@@ -35,7 +35,7 @@ PONTO_INICIAL = (1,1)
 # PONTO FINAL NA PAREDE INFERIOR
 for i in range(len(LABIRINTO_GLOBAL)):
     if LABIRINTO_GLOBAL[i][-1] == FIM: # procura nas linhas finais
-        PONTO_FINAL = (i, len(LABIRINTO_GLOBAL)-1)
+        PONTO_FINAL = (i, len(LABIRINTO_GLOBAL[0])-1)
         print(PONTO_FINAL)
 
 # PONTO FINAL NA PAREDE DA DIREITA
