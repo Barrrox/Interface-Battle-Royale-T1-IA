@@ -37,7 +37,7 @@ Contém um algoritmo separado dos outros que serve apenas para gerar o caminho f
     L2: 21x21 (hermes/rafael)
     L3: em aberto (andre/barros)
 4. Gerador de labirinto (decisões de Pedro, Barros e Silva):
-    1. Utilizaremos o algoritmo de Kruskal.
+    1. Utilizaremos o algoritmo de Kruskal (gera um labirinto perfeito).
     2. Na matriz do labirinto: 
         1. Caminho = 0
         2. Parede = 1
