@@ -115,14 +115,3 @@ def algoritmo_dead_end_filling(labirinto):
     print("Falha Dead-end-filling")
     # Se não encontrar caminho (improvável se houver solução)
     return []
-
-
-labirinto = [   [1, 1, 1, 1, 1, 1, 1],
-                [1, 2, 0, 0, 1, 0, 1],
-                [1, 1, 1, 0, 1, 0, 1],
-                [1, 0, 0, 0, 1, 0, 1],
-                [1, 1, 1, 0, 1, 0, 1],
-                [1, 0, 0, 0, 0, 0, 1],
-                [1, 1, 1, 3, 1, 1, 1]]
-
-algoritmo_dead_end_filling(labirinto)

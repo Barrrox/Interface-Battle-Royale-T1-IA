@@ -7,6 +7,7 @@ que cria e retorna um labrinto em forma de matriz, seguindo o algoritmo de Krusk
 import random
 import numpy as np
 import parametros
+import time
 
 
 class DisjointSet:
@@ -55,6 +56,8 @@ def gerar_labirinto_kruskal(width, height):
     Returns:
         numpy.ndarray: Uma matriz 2D onde 0=caminho, 1=parede, 2=início, 3=saída.
     """
+    tempo_inicio = time.time()
+
     CAMINHO = parametros.CAMINHO
     PAREDE = parametros.PAREDE
     INICIO = parametros.INICIO
@@ -140,4 +143,6 @@ def gerar_labirinto_kruskal(width, height):
     if not exit_created:
         labirinto_matriz[-1, -2] = FIM
         
+    t_gerar_labirinto = time.time() - tempo_inicio
+    print(f"Labirinto gerado em {t_gerar_labirinto} segundos")
     return labirinto_matriz

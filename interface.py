@@ -177,7 +177,6 @@ def main():
     # ### NOVO: Definição mais centralizada e maior para o botão de pausa
     botao_pause_rect = pygame.Rect(LARGURA_TELA / 2 - 75, 15, 150, 40)
 
-    print(LABIRINTO_GLOBAL)
     caminho_final = algoritmo_dead_end_filling(LABIRINTO_GLOBAL)
 
     while running:
