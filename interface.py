@@ -166,6 +166,7 @@ def main():
         "BFS": algoritmo_bfs,
         "DEAD END FILL": algoritmo_dead_end_filling
     }
+    
     threads = []
 
     indice_animacao = 0

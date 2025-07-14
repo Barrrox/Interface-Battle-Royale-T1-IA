@@ -4,7 +4,6 @@ que cria e retorna um labrinto em forma de matriz, seguindo o algoritmo de Krusk
 
 """
 
-from PIL import Image
 import random
 import numpy as np
 import parametros
@@ -74,11 +73,20 @@ def gerar_labirinto_kruskal(width, height):
     maze_edges = []
     ds = DisjointSet(nodes)
 
+    # --- INÍCIO DA OTIMIZAÇÃO ---
+    # 1. Embaralha a lista de arestas uma única vez.
+    random.shuffle(edges)
+    
     while len(maze_edges) < len(nodes) - 1 and len(edges) > 0:
-        edge = edges.pop(random.randint(0, len(edges) - 1))
+        # 2. Pega o último elemento da lista embaralhada.
+        # Esta operação (pop sem índice) é extremamente rápida (O(1)).
+        edge = edges.pop()
+        
+        # O restante do código permanece idêntico.
         if ds.find(edge[0]) != ds.find(edge[1]):
             ds.union(edge[0], edge[1])
             maze_edges.append(edge)
+    # --- FIM DA OTIMIZAÇÃO ---
 
     # --- Passo 3: Construir a matriz do labirinto a partir das arestas ---
     # Dimensões da matriz em pixels, usando o padrão (altura, largura)
@@ -133,35 +141,3 @@ def gerar_labirinto_kruskal(width, height):
         labirinto_matriz[-1, -2] = FIM
         
     return labirinto_matriz
-
-# --- Exemplo de Uso ---
-if __name__ == "__main__":
-
-    meu_labirinto = gerar_labirinto_kruskal(20, 20)
-
-    CAMINHO = parametros.CAMINHO
-    PAREDE = parametros.PAREDE
-    INICIO = parametros.INICIO
-    FIM = parametros.FIM
-
-    print(f"Matriz do labirinto gerado (dimensões: {meu_labirinto.shape}):")
-    # print(meu_labirinto) # Descomente para ver a matriz no console
-
-    # --- Para visualizar a imagem (requer Pillow/PIL) ---
-    # Converte a matriz para uma imagem em escala de cinza para visualização
-    # 0 (caminho) = branco, 1 (parede) = preto, 2 (inicio) e 3 (fim) = cinza
-    imagem_array = np.copy(meu_labirinto)
-    imagem_array[imagem_array == CAMINHO] = 255 # Paredes
-    imagem_array[imagem_array == PAREDE] = 0 # Paredes
-    imagem_array[imagem_array == INICIO] = 120 # Entrada
-    imagem_array[imagem_array == FIM] = 120 # Saída
-    
-    im = Image.fromarray(imagem_array)
-    im.show()
-
-    # ## Salvar o labirinto (inclua a extensão!)
-    # try:
-    #     im.save("meu_labirinto.png")
-    #     print("Labirinto salvo como 'meu_labirinto.png'")
-    # except Exception as e:
-    #     print(f"Não foi possível salvar a imagem: {e}")
