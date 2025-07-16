@@ -65,12 +65,35 @@ def gerar_labirinto_kruskal(width, height):
     # --- Passo 1: Definir nós e arestas com base na largura e altura ---
     nodes = [(x, y) for y in range(height) for x in range(width)]
     
-    # Função aninhada para encontrar vizinhos, agora usa width e height
-    def get_neighbors(n):
-        return [(n[0]+dx, n[1]+dy) for dx, dy in ((-1, 0), (1, 0), (0, -1), (0, 1))
-                if 0 <= n[0]+dx < width and 0 <= n[1]+dy < height]
+    # # Função aninhada para encontrar vizinhos, agora usa width e height
+    # def get_neighbors(n):
+    #     (n_0, n_1) = n
+    #     return [(n_0+dx, n_1+dy) for dx, dy in ((1, 0), (0, 1))
+    #             if 0 <= n_0+dx < width and 0 <= n_1+dy < height]
 
-    edges = [(node, nbor) for node in nodes for nbor in get_neighbors(node)]
+    # edges = [(node, nbor) for node in nodes for nbor in get_neighbors(node)]
+
+    ### OTIMIZAÇÃO: o de cima foi substituido pelo de baixo
+
+    edges = []
+
+    for node in nodes:
+        (n_0, n_1) = node
+
+        # for dx, dy in ((1,0), (0,1)):
+
+        # verificando pra esquerda (n_0+1, n_1)
+        nx = n_0+1
+        ny = n_1
+        if 0 <= nx < width and 0 <= ny < height:
+            edges.append((node,(nx,ny)))
+        
+        # verificando pra direita (n_0, n_1+1)
+        nx-=1
+        ny+=1
+
+        if 0 <= nx < width and 0 <= ny < height:
+            edges.append((node,(nx,ny)))
     
     # --- Passo 2: Algoritmo de Kruskal para criar um "spanning tree" ---
     maze_edges = []
