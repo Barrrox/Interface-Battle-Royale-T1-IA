@@ -11,8 +11,8 @@ import time
 import parametros
 # Supondo que estes arquivos existam e funcionem como discutido anteriormente
 from algoritmos_teste import *
-from caminho_final import *
 import numpy as np
+from caminho_final import aEstrela
 
 
 # --- 1. CONFIGURAÇÕES GERAIS E CORES ---
@@ -96,7 +96,7 @@ def executar_algoritmo(func_algoritmo, nome, labirinto, caminho_final):
     # multiplicador = 1
 
     # Quanto menor, melhor
-    pontuacao = int(tempo*n_celulas_visitadas*multiplicador)
+    pontuacao = tempo*n_celulas_visitadas
 
     resultados[nome] = {
         "historico": historico,
@@ -164,7 +164,7 @@ def main():
     algoritmos = {
         "DFS": algoritmo_dfs,
         "BFS": algoritmo_bfs,
-        "DEAD END FILL": algoritmo_dead_end_filling
+        # "DEAD END FILL": algoritmo_dead_end_filling
     }
     
     threads = []
@@ -177,7 +177,8 @@ def main():
     # ### NOVO: Definição mais centralizada e maior para o botão de pausa
     botao_pause_rect = pygame.Rect(LARGURA_TELA / 2 - 75, 15, 150, 40)
 
-    caminho_final = algoritmo_dead_end_filling(LABIRINTO_GLOBAL)
+    # Encontra o caminho mínimo final com A*
+    caminho_final = aEstrela(LABIRINTO_GLOBAL)
 
     while running:
         # ### MODIFICADO: Loop de eventos para lidar com o estado de PAUSA
@@ -270,7 +271,7 @@ def main():
                 screen.blit(tempo_surf, (offset_x, 65 + 25 + 25))
 
                 pontuacao = resultados[nome]['pontuacao']
-                tempo_surf = fonte_padrao.render(f"Pontuação: {pontuacao}", True, COR_TEXTO)
+                tempo_surf = fonte_padrao.render(f"Pontuação: {pontuacao:.4f}", True, COR_TEXTO)
                 screen.blit(tempo_surf, (offset_x, 65 + 25 + 25 + 25))
 
                 # Desenha o labirinto base
