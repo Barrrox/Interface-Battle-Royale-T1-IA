@@ -12,7 +12,7 @@ import parametros
 # Supondo que estes arquivos existam e funcionem como discutido anteriormente
 from algoritmos_teste import *
 import numpy as np
-from caminho_final import aEstrela_perfeito
+from caminho_final import aEstrela
 
 
 # --- 1. CONFIGURAÇÕES GERAIS E CORES ---
@@ -162,9 +162,9 @@ def main():
     estado_app = "AGUARDANDO"  # AGUARDANDO -> COMPUTANDO -> ANIMANDO -> PAUSADO -> FINALIZADO
 
     algoritmos = {
-        "DFS": algoritmo_dfs,
-        "BFS": algoritmo_bfs,
-        # "DEAD END FILL": algoritmo_dead_end_filling
+        "DFS": DFS,
+        "GBFS": algoritmo_gbfs,
+        "A*": aEstrelaAlg
     }
     
     threads = []
@@ -178,7 +178,7 @@ def main():
     botao_pause_rect = pygame.Rect(LARGURA_TELA / 2 - 75, 15, 150, 40)
 
     # Encontra o caminho mínimo final com A*
-    caminho_final = aEstrela_perfeito(LABIRINTO_GLOBAL)
+    caminho_final = aEstrela(LABIRINTO_GLOBAL)
 
     while running:
         # ### MODIFICADO: Loop de eventos para lidar com o estado de PAUSA

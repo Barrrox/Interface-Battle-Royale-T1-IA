@@ -1,140 +1,201 @@
 """
 Código com os algoritmos teste usados durante implementação da interface
 """
-import random
+import numpy as np
+import heapq
+from typing import Tuple, List, Optional, Dict, Set
+from operator import itemgetter
+import numpy as np
 
-def algoritmo_dfs(labirinto):
-    """Busca em Profundidade (Depth-First Search)"""
-    
-    inicio = (1,1)
 
-    altura_labirinto = len(labirinto)
-    largura_labirinto = len(labirinto[0])
-    
-    for i in range(altura_labirinto):
-        if labirinto[i][-1] == 3:
-            fim = (i, largura_labirinto - 1)
+"""
+Algoritmo A*
 
-    for i in range(largura_labirinto):
-        if labirinto[-1][i] == 3:
-            fim = (altura_labirinto - 1, i)
-    
+Autores: Pedro e Roberto
+
+"""
+def aEstrelaAlg(labirinto):
+    posicaoInicial = (1, 1)  
+    procuraFinal = np.where(labirinto == 3)
+    posicaoFinal = (procuraFinal[0][0], procuraFinal[1][0])
+
+    vetorAberto = [(0, 0, posicaoInicial)] 
+    vetorFechado = set()  
+    pais = {posicaoInicial: None}  
+    gCustos = {posicaoInicial: 0} 
     
     historico = []
-    pilha = [(inicio, [inicio])]
-    visitados = set([inicio])
-    
-    while pilha:
-        (pos_atual, caminho_parcial) = pilha.pop()
-        
-        
-        # Adiciona a iteração ao histórico no formato pedido
-        # (posição atual, células visitadas na iteração) - aqui, visitados é o conjunto total até agora
-        historico.append(pos_atual)
-        
-        if pos_atual == fim:
-            return historico # Sucesso
-        
-        (y, x) = pos_atual
-        vizinhos = [(y-1, x), (y+1, x), (y, x-1), (y, x+1)]
-        random.shuffle(vizinhos) # Adiciona um pouco de aleatoriedade ao DFS
+    altura, largura = labirinto.shape
 
-        for vizinho in vizinhos:
-            (vy, vx) = vizinho
-            if 0 <= vy < len(labirinto) and 0 <= vx < len(labirinto[0]) and labirinto[vy][vx] != 1 and vizinho not in visitados:
-                visitados.add(vizinho)
-                pilha.append((vizinho, caminho_parcial + [vizinho]))
-    
-    print("FALHA!")
-    return historico # Falha
+    while vetorAberto:
+        fAtual, hAtual, posicaoAtual = heapq.heappop(vetorAberto)
 
-# labirinto = [[1,1,1,1,1],
-#              [1,1,1,1,3],
-#              [1,1,1,1,1],
-#              [1,1,1,1,1],
-#              [1,1,1,1,1],]
+        if posicaoAtual in vetorFechado:
+            continue 
 
-# print(algoritmo_dfs(labirinto))
+        historico.append(posicaoAtual)
+        vetorFechado.add(posicaoAtual)  
 
-
-def algoritmo_bfs(labirinto):
-    """Busca em Largura (Breadth-First Search)"""
-    
-    inicio = (1,1)
-
-    altura_labirinto = len(labirinto)
-    largura_labirinto = len(labirinto[0])
-    
-    for i in range(altura_labirinto):
-        if labirinto[i][-1] == 3:
-            fim = (i, largura_labirinto - 1)
-
-    for i in range(largura_labirinto):
-        if labirinto[-1][i] == 3:
-            fim = (altura_labirinto - 1, i)
-
-    historico = []
-    fila = [(inicio, [inicio])]
-    visitados = set([inicio])
-    
-    while fila:
-        (pos_atual, caminho_parcial) = fila.pop(0)
-        
-        # Alteração: Adiciona apenas a posição atual (tupla) ao histórico
-        historico.append(pos_atual)
-        
-        if pos_atual == fim:
-            # Alteração: Remove o append extra do caminho, pois o objetivo é retornar
-            # apenas as posições visitadas. A posição final já foi adicionada acima.
+        if posicaoAtual == posicaoFinal:
             return historico
-
-        (y, x) = pos_atual
-        vizinhos = [(y-1, x), (y+1, x), (y, x-1), (y, x+1)]
-
-        for vizinho in vizinhos:
-            (vy, vx) = vizinho
-            if 0 <= vy < len(labirinto) and 0 <= vx < len(labirinto[0]) and labirinto[vy][vx] != 1 and vizinho not in visitados:
-                visitados.add(vizinho)
-                fila.append((vizinho, caminho_parcial + [vizinho]))
-    
-    return historico
-
-def algoritmo_stub(labirinto):
-    """Um algoritmo 'bobo' para demonstração."""
-    
-    inicio = (1,1)
-
-    altura_labirinto = len(labirinto)
-    largura_labirinto = len(labirinto[0])
-    
-    for i in range(altura_labirinto):
-        if labirinto[i][-1] == 3:
-            fim = (i, largura_labirinto - 1)
-
-    for i in range(largura_labirinto):
-        if labirinto[-1][i] == 3:
-            fim = (altura_labirinto - 1, i)
-
-    
-    historico = []
-    pos_atual = inicio
-    visitados = set([inicio])
-    
-    while pos_atual != fim:
-        # Alteração: Adiciona apenas a posição atual (tupla) ao histórico
-        historico.append(pos_atual)
-        (y, x) = pos_atual
-        
-        # Move-se na diagonal, se possível, de forma ineficiente
-        if x < fim[1] and labirinto[y][x+1] != 1:
-            x += 1
-        elif y < fim[0] and labirinto[y+1][x] != 1:
-            y += 1
-        else: # Beco sem saída, termina
-            break
             
-        pos_atual = (y, x)
+        vizinhos = []
+        x, y = posicaoAtual
+        
+        if x > 0 and labirinto[x-1, y] != 1:
+            vizinhos.append((x-1, y))
+        # Depois pra baixo
+        if x < (altura - 1) and labirinto[x+1, y] != 1:
+            vizinhos.append((x+1, y))
+        # Depois pra esquerda
+        if y > 0 and labirinto[x, y-1] != 1:
+            vizinhos.append((x, y-1))
+        # Depois pra direita
+        if y < (largura - 1) and labirinto[x, y+1] != 1:
+            vizinhos.append((x, y+1))
+        
+        gAtual = gCustos[posicaoAtual]
+        
+        for vizinho in vizinhos:
+            if vizinho in vetorFechado:
+                continue
 
-    # Alteração: Adiciona a posição final (ou a última posição antes de parar) ao histórico
-    historico.append(pos_atual)
+            # Calcula o custo g do vizinho
+            gNovo = gAtual + 1  # Custo de mover para o vizinho
+
+            # verifico se este é o melhor caminho para o vizinhança
+            if vizinho not in gCustos or gNovo < gCustos[vizinho]:
+                # Atualiza o custo g do vizinho
+                gCustos[vizinho] = gNovo
+                # Atualiza o pai do vizinho
+                pais[vizinho] = posicaoAtual
+                # HEURISTICA
+                hNovo = abs(vizinho[0] - posicaoFinal[0]) + abs(vizinho[1] - posicaoFinal[1])
+                fNovo = gNovo + hNovo
+                
+                # Adiciona o vizinho ao vetor aberto
+                heapq.heappush(vetorAberto, (fNovo, hNovo, vizinho))
     return historico
+
+"""
+Algoritmo Greedy Best-First Search
+
+Autores: Matheus Barros e André
+
+"""
+def algoritmo_gbfs(labirinto):
+    copia_labirinto = labirinto.copy()
+    altura = len(copia_labirinto)
+    largura = len(copia_labirinto[0])
+    fim_0, fim_1 = None, None
+    for x in range(largura):
+        if copia_labirinto[altura - 1][x] == 3:
+            fim_0 = altura - 1 
+            fim_1 = x
+            break
+    if fim_0 is None:
+        for y in range(altura):
+            if copia_labirinto[y][largura - 1] == 3:
+                fim_0 = y
+                fim_1 = largura - 1
+                break
+    historico = []
+    conjunto_aberto = [(None, (1,1))]
+    while conjunto_aberto:
+        _, pos_atual = heapq.heappop(conjunto_aberto)
+        (y, x) = pos_atual
+        historico.append(pos_atual)
+        copia_labirinto[y][x] = 1
+        for vizinho in [(y, x+1),(y+1, x),(y-1, x),(y, x-1)]:
+            (vy, vx) = vizinho
+            if copia_labirinto[vy][vx] != 1:
+                if vy == fim_0 and vx == fim_1:
+                    return historico
+                heapq.heappush(conjunto_aberto, ((vizinho[0] - fim_0)**2 + (vizinho[1] - fim_1)**2, vizinho))
+    print("FALHA: Caminho não encontrado!")
+    return historico
+
+
+"""
+Algoritmo Depth First Search
+
+Autores: Hermes e Rafael
+
+"""
+
+def encontrarFim(Labirinto, MaxLinha, MaxColuna):
+    l = int(round(MaxLinha / 2, 0))
+    c = int(round(MaxColuna / 2, 0))
+
+    for i in range(l, MaxLinha):
+      for j in range(c, MaxColuna):
+        if Labirinto[i][j] == 3: # Chegada
+          return (i, j)
+
+def PreManhattan(max_linhas, max_colunas, destino):
+    Fy, Fx = destino
+    return [[abs(y - Fy) + abs(x - Fx)           # tabela inteira
+             for x in range(max_colunas)]
+             for y in range(max_linhas)]
+
+def DFS(Labirinto):
+    Historico = []
+    Pilha = []
+    push = Pilha.append
+    pop = Pilha.pop
+
+    MaxLinha = len(Labirinto)
+    MaxColuna = len(Labirinto[0])
+
+    DirecaoLinha = [1, 0, 0, -1]
+    DirecaoColuna = [0, 1, -1, 0]
+
+    Final = encontrarFim(Labirinto, MaxLinha, MaxColuna)
+    H = PreManhattan(MaxLinha, MaxColuna, Final)
+
+    Historico.append((1, 1))
+
+    Baixo  = -1        
+    if Labirinto[2][1] not in (1, 4):          
+        Baixo = H[2][1]
+
+    Direita = -1
+    if Labirinto[1][2] not in (1, 4): 
+        Direita= H[1][2]
+
+    # empilha primeiro a direção com heurística MAIOR
+    if Baixo >= Direita:
+        if Baixo >= 0: 
+          push((2, 1)) 
+        if Direita >= 0: 
+          push((1, 2)) 
+    else:
+        push((1, 2))
+        if Baixo >= 0: 
+          push((2, 1))
+
+    while len(Pilha) > 0: # pilha não vazia
+        LinhaAtual, ColunaAtual = pop()
+        Historico.append((LinhaAtual, ColunaAtual))
+        Labirinto[LinhaAtual][ColunaAtual] = 4
+
+        # Baixo, Direita, Esquerda, Cima
+        Vizinhos = []
+
+        for IndiceDirecao in range(4): # DFS (4 direções)
+            LinhaAdjacente = LinhaAtual + DirecaoLinha[IndiceDirecao] 
+            ColunaAdjacente = ColunaAtual + DirecaoColuna[IndiceDirecao]
+
+            if Labirinto[LinhaAdjacente][ColunaAdjacente] in (1, 4): # Antigo Is verify pula se for parede ou andado
+                continue
+
+            if (LinhaAdjacente, ColunaAdjacente) == Final:
+              Historico.append((LinhaAdjacente, ColunaAdjacente))
+              return (Historico)
+
+            Vizinhos.append((H[LinhaAdjacente][ColunaAdjacente], IndiceDirecao, LinhaAdjacente, ColunaAdjacente))
+
+        Vizinhos.sort(key=lambda t: (-t[0], t[1])) 
+
+        for _, IndiceDirecao, LinhaAdjacente, ColunaAdjacente in Vizinhos:
+          push((LinhaAdjacente, ColunaAdjacente))   

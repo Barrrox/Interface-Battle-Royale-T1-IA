@@ -2,6 +2,7 @@ import time
 import numpy as np
 from algoritmos_teste import *
 from caminho_final import aEstrela_perfeito
+import random
 
 
 
@@ -52,6 +53,9 @@ def gerar_labirinto_kruskal(width, height):
     Returns:
         numpy.ndarray: Uma matriz 2D onde 0=caminho, 1=parede, 2=início, 3=saída.
     """
+    tempo_inicio = time.time()
+    print("Gerando labirinto com Kruskal")
+
     CAMINHO = 0
     PAREDE = 1
     INICIO = 2
@@ -59,22 +63,54 @@ def gerar_labirinto_kruskal(width, height):
     # --- Passo 1: Definir nós e arestas com base na largura e altura ---
     nodes = [(x, y) for y in range(height) for x in range(width)]
     
-    # Função aninhada para encontrar vizinhos, agora usa width e height
-    def get_neighbors(n):
-        return [(n[0]+dx, n[1]+dy) for dx, dy in ((-1, 0), (1, 0), (0, -1), (0, 1))
-                if 0 <= n[0]+dx < width and 0 <= n[1]+dy < height]
+    # # Função aninhada para encontrar vizinhos, agora usa width e height
+    # def get_neighbors(n):
+    #     (n_0, n_1) = n
+    #     return [(n_0+dx, n_1+dy) for dx, dy in ((1, 0), (0, 1))
+    #             if 0 <= n_0+dx < width and 0 <= n_1+dy < height]
 
-    edges = [(node, nbor) for node in nodes for nbor in get_neighbors(node)]
+    # edges = [(node, nbor) for node in nodes for nbor in get_neighbors(node)]
+
+    ### OTIMIZAÇÃO: o de cima foi substituido pelo de baixo
+
+    edges = []
+
+    for node in nodes:
+        (n_0, n_1) = node
+
+        # for dx, dy in ((1,0), (0,1)):
+
+        # verificando pra esquerda (n_0+1, n_1)
+        nx = n_0+1
+        ny = n_1
+        if 0 <= nx < width and 0 <= ny < height:
+            edges.append((node,(nx,ny)))
+        
+        # verificando pra direita (n_0, n_1+1)
+        nx-=1
+        ny+=1
+
+        if 0 <= nx < width and 0 <= ny < height:
+            edges.append((node,(nx,ny)))
     
     # --- Passo 2: Algoritmo de Kruskal para criar um "spanning tree" ---
     maze_edges = []
     ds = DisjointSet(nodes)
 
+    # --- INÍCIO DA OTIMIZAÇÃO ---
+    # 1. Embaralha a lista de arestas uma única vez.
+    random.shuffle(edges)
+    
     while len(maze_edges) < len(nodes) - 1 and len(edges) > 0:
-        edge = edges.pop(random.randint(0, len(edges) - 1))
+        # 2. Pega o último elemento da lista embaralhada.
+        # Esta operação (pop sem índice) é extremamente rápida (O(1)).
+        edge = edges.pop()
+        
+        # O restante do código permanece idêntico.
         if ds.find(edge[0]) != ds.find(edge[1]):
             ds.union(edge[0], edge[1])
             maze_edges.append(edge)
+    # --- FIM DA OTIMIZAÇÃO ---
 
     # --- Passo 3: Construir a matriz do labirinto a partir das arestas ---
     # Dimensões da matriz em pixels, usando o padrão (altura, largura)
@@ -128,6 +164,8 @@ def gerar_labirinto_kruskal(width, height):
     if not exit_created:
         labirinto_matriz[-1, -2] = FIM
         
+    t_gerar_labirinto = time.time() - tempo_inicio
+    print(f"Labirinto gerado em {t_gerar_labirinto} segundos")
     return labirinto_matriz
 
 def executar_algoritmo(func_algoritmo, labirinto):
@@ -144,14 +182,13 @@ def executar_algoritmo(func_algoritmo, labirinto):
 
 # DEFINE ALTURA E LARGURA
 
-largura = 10
-altura = 20
+largura = 937
+altura = 654
 
 labirintos_por_iteracao = 1
 
 algoritmos = {
-    "bfs" : algoritmo_bfs,
-    "dfs" : algoritmo_dfs,
+    "GBFS": algoritmo_gbfs
     # "def" : algoritmo_dead_end_filling
 }
 
