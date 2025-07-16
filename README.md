@@ -28,6 +28,10 @@ guarda 3 algoritmos para fins de testes
 
 Contém um algoritmo separado dos outros que serve apenas para gerar o caminho final
 
+### teste_de_pontuacao.py
+
+Aqui os códigos podem ser testados com várias iterações, tamanhos de labirintos distintos e sem a animação
+
 # Decisões de projeto:
 
 1. Cada grupo deve criar uma função que recebe como parâmetro o labirinto e retornar um histórico(lista do python) do percurso feito pelo seu algoritmo (será explicado mais a frente nesse documento).
@@ -44,9 +48,8 @@ Contém um algoritmo separado dos outros que serve apenas para gerar o caminho f
         3. Ponto de início = 2
         4. Ponto de fim = 3
 5. O labirinto pode ter tamanho variável.
-6. Analisar celulas também conta como um passo 
-7. O labirinto terá paredes para delimitação.
-8. Interface e animação
+6. O labirinto terá paredes para delimitação.
+7. Interface e animação
     1. Será utilizada a biblioteca Pygame
     2. A animação será produzida após a execução dos algoritmos
 
@@ -57,5 +60,5 @@ Essa matriz é necessária para a animação do labirinto.
 
 # Pontuação
 
-A pontuação de cada algoritmo será calculada pela multiplicação dos valores de tempo de execução e celulas visitadas. Portanto quanto menor a pontuação, melhor
+A pontuação de cada algoritmo será calculada pela multiplicação dos valores de tempo de execução e celulas visitadas. Portanto quanto menor a pontuação, melhor. Ainda, há um multiplicador (opicional) de valor baseado no tamanho do labirinto que multiplica todas as pontuações. Ele não impacta no ranking pois é sempre o mesmo valor para todas as pontuações e diferente para cada tamanho de labirinto.
 
