@@ -1,13 +1,8 @@
-"""
-Código redesenhado pelo gemini para implementar a função gerar_labirinto_kruskal(width, height)
-que cria e retorna um labrinto em forma de matriz, seguindo o algoritmo de Kruskal
-
-"""
-
-import random
-import numpy as np
-import parametros
 import time
+import numpy as np
+from algoritmos_teste import *
+from caminho_final import aEstrela_perfeito
+
 
 
 class DisjointSet:
@@ -44,6 +39,7 @@ class DisjointSet:
             self.val = val
             self.parent = parent
 
+
 def gerar_labirinto_kruskal(width, height):
     """
     Gera uma matriz representando um labirinto com a largura e altura especificadas
@@ -56,64 +52,29 @@ def gerar_labirinto_kruskal(width, height):
     Returns:
         numpy.ndarray: Uma matriz 2D onde 0=caminho, 1=parede, 2=início, 3=saída.
     """
-    tempo_inicio = time.time()
-    print("Gerando labirinto com Kruskal")
-
-    CAMINHO = parametros.CAMINHO
-    PAREDE = parametros.PAREDE
-    INICIO = parametros.INICIO
-    FIM = parametros.FIM
+    CAMINHO = 0
+    PAREDE = 1
+    INICIO = 2
+    FIM = 3
     # --- Passo 1: Definir nós e arestas com base na largura e altura ---
     nodes = [(x, y) for y in range(height) for x in range(width)]
     
-    # # Função aninhada para encontrar vizinhos, agora usa width e height
-    # def get_neighbors(n):
-    #     (n_0, n_1) = n
-    #     return [(n_0+dx, n_1+dy) for dx, dy in ((1, 0), (0, 1))
-    #             if 0 <= n_0+dx < width and 0 <= n_1+dy < height]
+    # Função aninhada para encontrar vizinhos, agora usa width e height
+    def get_neighbors(n):
+        return [(n[0]+dx, n[1]+dy) for dx, dy in ((-1, 0), (1, 0), (0, -1), (0, 1))
+                if 0 <= n[0]+dx < width and 0 <= n[1]+dy < height]
 
-    # edges = [(node, nbor) for node in nodes for nbor in get_neighbors(node)]
-
-    ### OTIMIZAÇÃO: o de cima foi substituido pelo de baixo
-
-    edges = []
-
-    for node in nodes:
-        (n_0, n_1) = node
-
-        # for dx, dy in ((1,0), (0,1)):
-
-        # verificando pra esquerda (n_0+1, n_1)
-        nx = n_0+1
-        ny = n_1
-        if 0 <= nx < width and 0 <= ny < height:
-            edges.append((node,(nx,ny)))
-        
-        # verificando pra direita (n_0, n_1+1)
-        nx-=1
-        ny+=1
-
-        if 0 <= nx < width and 0 <= ny < height:
-            edges.append((node,(nx,ny)))
+    edges = [(node, nbor) for node in nodes for nbor in get_neighbors(node)]
     
     # --- Passo 2: Algoritmo de Kruskal para criar um "spanning tree" ---
     maze_edges = []
     ds = DisjointSet(nodes)
 
-    # --- INÍCIO DA OTIMIZAÇÃO ---
-    # 1. Embaralha a lista de arestas uma única vez.
-    random.shuffle(edges)
-    
     while len(maze_edges) < len(nodes) - 1 and len(edges) > 0:
-        # 2. Pega o último elemento da lista embaralhada.
-        # Esta operação (pop sem índice) é extremamente rápida (O(1)).
-        edge = edges.pop()
-        
-        # O restante do código permanece idêntico.
+        edge = edges.pop(random.randint(0, len(edges) - 1))
         if ds.find(edge[0]) != ds.find(edge[1]):
             ds.union(edge[0], edge[1])
             maze_edges.append(edge)
-    # --- FIM DA OTIMIZAÇÃO ---
 
     # --- Passo 3: Construir a matriz do labirinto a partir das arestas ---
     # Dimensões da matriz em pixels, usando o padrão (altura, largura)
@@ -167,6 +128,106 @@ def gerar_labirinto_kruskal(width, height):
     if not exit_created:
         labirinto_matriz[-1, -2] = FIM
         
-    t_gerar_labirinto = time.time() - tempo_inicio
-    print(f"Labirinto gerado em {t_gerar_labirinto} segundos")
     return labirinto_matriz
+
+def executar_algoritmo(func_algoritmo, labirinto):
+    """Função alvo da thread: executa um algoritmo e mede o tempo."""
+    tempo_inicial = time.perf_counter()
+    historico = func_algoritmo(labirinto)
+    tempo_final = time.perf_counter()
+
+    espaco = len(historico)
+
+    tempo = tempo_final - tempo_inicial
+
+    return tempo, espaco
+
+# DEFINE ALTURA E LARGURA
+
+largura = 10
+altura = 20
+
+labirintos_por_iteracao = 1
+
+algoritmos = {
+    "bfs" : algoritmo_bfs,
+    "dfs" : algoritmo_dfs,
+    # "def" : algoritmo_dead_end_filling
+}
+
+# Cria um dicionario em que:
+# 1. Cada chave é o nome do algoritmo
+# 2. Cada valor terá mais um dicionario dentro, que contem a pontuacao media
+resultados = {
+    nome : {
+    "pontuacao_media" : 0,
+    "tempo execucao" : 0,
+    "celulas visitadas" : 0
+    } for nome in algoritmos
+}
+
+
+
+pontuacao_final = {
+    nome : 0 for nome in algoritmos
+}
+
+# # loop para calcular labirintos de um tamanho inicial até um tamanho final,
+# # incluindo o tamanho final
+# for altura_atual in range(altura_inicial, altura_final + passo, passo):
+
+
+    # Zerando as variaveis de media
+for algoritmo in algoritmos:
+    resultados[algoritmo]["pontuacao_media"] = 0
+   
+    # # loop para calcular quantos labirintos serão gerados para cada tamanho de labirinto
+    # for j in range(labirintos_por_iteracao):
+
+#     # gera labirinto
+labirinto = gerar_labirinto_kruskal(altura, largura)
+
+# multiplicador = 1000000/2.7**np.sqrt(tamanho_atual+tamanho_atual)
+
+# Calcula para cada algoritmo
+for algoritmo in algoritmos:
+    # Executa e captura o tempo de exe e o espaco (celulas visitadas)
+    tempo, espaco = executar_algoritmo(algoritmos[algoritmo], labirinto)
+    resultados[algoritmo]["tempo execucao"] += tempo
+    resultados[algoritmo]["celulas visitadas"] += espaco
+    resultados[algoritmo]["pontuacao_media"] += (tempo*espaco)/labirintos_por_iteracao # Ja soma dividido para calcular a media 
+        
+    # Calculando vencedor para o labirinto de tamanho atual    
+
+    # A melhor pontuacao será a mais baixa
+    melhor_pontuacao = np.inf # infinito
+    vencedor = ""
+
+print(f"\n ----------------- LABIRINTO {largura*2 + 1}x{altura*2 + 1} ----------------- \n")
+
+for algoritmo in resultados:
+    # Guarda a pontuacao do algoritmo atual
+    t_exe = resultados[algoritmo]["tempo execucao"]
+    c_visitadas = resultados[algoritmo]["celulas visitadas"]
+    pontuacao_algoritmo = resultados[algoritmo]["pontuacao_media"]
+    
+    print(f"{algoritmo}:")
+    print(f"  Tempo de execução : {t_exe}s")
+    print(f"  Celulas visitadas : {c_visitadas}")
+    print(f"  Pontuação final   : {pontuacao_algoritmo}\n")
+
+    # Procura o menor valor (melhor pontuaçao)
+    if pontuacao_algoritmo < melhor_pontuacao:
+        melhor_pontuacao = pontuacao_algoritmo
+        vencedor = algoritmo
+    
+for nome in algoritmos:
+    if vencedor == nome:
+        pontuacao_final[nome] += 1
+
+    
+print(f"\nVENCEDOR: {vencedor} com {melhor_pontuacao}")
+
+print("\n\n ######## NÚMERO DE VITÓRIAS ######## \n ")
+for nome in pontuacao_final:
+    print(f"{nome} : {pontuacao_final[nome]} vitórias")

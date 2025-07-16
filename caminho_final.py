@@ -7,7 +7,7 @@ import time
 
 
 
-def aEstrela(labirinto):
+def aEstrela_perfeito(labirinto):
     """
     Algoritmo A star que encontra o caminho mímimo final
 
