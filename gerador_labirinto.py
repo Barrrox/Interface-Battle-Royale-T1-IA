@@ -169,4 +169,5 @@ def gerar_labirinto_kruskal(width, height):
         
     t_gerar_labirinto = time.time() - tempo_inicio
     print(f"Labirinto gerado em {t_gerar_labirinto} segundos")
+    print(labirinto_matriz)
     return labirinto_matriz
