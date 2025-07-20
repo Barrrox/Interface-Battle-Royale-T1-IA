@@ -1,6 +1,6 @@
 import time
 import numpy as np
-from algoritmos_teste import *
+from algoritmos import *
 from caminho_final import aEstrela_perfeito
 import random
 
@@ -184,8 +184,7 @@ def executar_algoritmo(func_algoritmo, labirinto):
 
 largura = 937
 altura = 654
-
-labirintos_por_iteracao = 1
+# labirintos_por_iteracao = 1
 
 algoritmos = {
     "GBFS": algoritmo_gbfs
@@ -203,28 +202,16 @@ resultados = {
     } for nome in algoritmos
 }
 
-
-
 pontuacao_final = {
     nome : 0 for nome in algoritmos
 }
 
-# # loop para calcular labirintos de um tamanho inicial até um tamanho final,
-# # incluindo o tamanho final
-# for altura_atual in range(altura_inicial, altura_final + passo, passo):
-
-
     # Zerando as variaveis de media
 for algoritmo in algoritmos:
     resultados[algoritmo]["pontuacao_media"] = 0
-   
-    # # loop para calcular quantos labirintos serão gerados para cada tamanho de labirinto
-    # for j in range(labirintos_por_iteracao):
 
 #     # gera labirinto
 labirinto = gerar_labirinto_kruskal(altura, largura)
-
-# multiplicador = 1000000/2.7**np.sqrt(tamanho_atual+tamanho_atual)
 
 # Calcula para cada algoritmo
 for algoritmo in algoritmos:
@@ -232,7 +219,7 @@ for algoritmo in algoritmos:
     tempo, espaco = executar_algoritmo(algoritmos[algoritmo], labirinto)
     resultados[algoritmo]["tempo execucao"] += tempo
     resultados[algoritmo]["celulas visitadas"] += espaco
-    resultados[algoritmo]["pontuacao_media"] += (tempo*espaco)/labirintos_por_iteracao # Ja soma dividido para calcular a media 
+    resultados[algoritmo]["pontuacao_media"] += (tempo*espaco) # Ja soma dividido para calcular a media 
         
     # Calculando vencedor para o labirinto de tamanho atual    
 
