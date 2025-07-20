@@ -10,7 +10,7 @@ import threading
 import time
 import parametros
 # Supondo que estes arquivos existam e funcionem como discutido anteriormente
-from algoritmos_teste import *
+from algoritmos import *
 import numpy as np
 from caminho_final import aEstrela
 
@@ -166,7 +166,6 @@ def main():
         "GBFS": algoritmo_gbfs,
         "A*": aEstrelaAlg
     }
-    
     threads = []
 
     indice_animacao = 0
