@@ -1,10 +1,7 @@
 #Pedro e Roberto
 import numpy as np
 import heapq
-from typing import Tuple, List, Optional, Dict, Set
 import time
-
-
 
 
 def aEstrela(labirinto):

@@ -14,23 +14,27 @@ Apoio: Silva, Lora, Roberto, Hermes, Andre
 
 ### parametros.py
 
-Guarda variáveis globais e parâmetros utilizados em todos os códigos
+Guarda variáveis globais e parâmetros. Outros códigos importam e utilizam as variáveis guardadas aqui. Nesse arquivo, pode ser alterardo a altura e largura do labirinto, tamanho das celulas, tamanho da janela de animação, velocidade da animação e outros aspectos sobre a animação da interface.
 
 ### gerador_labirinto.py
 
-Tem o algoritmo de Kruskal para gerar labirinto
+Contém o algoritmo de Kruskal para gerar o labirinto
 
-### algoritmos_teste.py
+### algoritmos.py
 
-guarda 3 algoritmos para fins de testes
+Guarda os 3 algortimos usados na competição
+
+### algoritmos_comentados.py
+
+Guarda os 3 algortimos usados na competição com a adição de comentários
 
 ### caminho_final.py
 
-Contém um algoritmo separado dos outros que serve apenas para gerar o caminho final
+Contém um algoritmo A* que serve apenas para gerar o caminho final na animação (em amarelo)
 
 ### teste_de_pontuacao.py
 
-Aqui os códigos podem ser testados com várias iterações, tamanhos de labirintos distintos e sem a animação
+Serve para computar uma iteração de competição sem mostrar a animação
 
 # Decisões de projeto:
 
@@ -60,5 +64,5 @@ Essa matriz é necessária para a animação do labirinto.
 
 # Pontuação
 
-A pontuação de cada algoritmo será calculada pela multiplicação dos valores de tempo de execução e celulas visitadas. Portanto quanto menor a pontuação, melhor. Ainda, há um multiplicador (opicional) de valor baseado no tamanho do labirinto que multiplica todas as pontuações. Ele não impacta no ranking pois é sempre o mesmo valor para todas as pontuações e diferente para cada tamanho de labirinto.
+A pontuação de cada algoritmo será calculada pela multiplicação dos valores de tempo de execução e celulas visitadas. Portanto quanto menor a pontuação, melhor.
 

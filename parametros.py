@@ -16,9 +16,9 @@ MARGEM_ESQUERDA = 20
 # Os valores de altura e largura serão duplicados e incrementados em 1.
 # Ex: se a LARGURA_LABIRINTO = 10, então o labirinto terá tamanho 10*2 + 1 = 21
 # (Eu (Barros) tentei deixar o valor daqui ser diretamente o tamanho do labirinto mas num deu nao)
-LARGURA_LABIRINTO = 217
-ALTURA_LABIRINTO = 604
-TAMANHO_CELULA = 1
+LARGURA_LABIRINTO = 50
+ALTURA_LABIRINTO = 50
+TAMANHO_CELULA = 5
 
 # Valores dos elementos na matriz do labirinto
 CAMINHO = 0
@@ -43,4 +43,4 @@ for i in range(len(LABIRINTO_GLOBAL[0])):
         PONTO_FINAL = (len(LABIRINTO_GLOBAL)-1, i)
 
 # Animação 
-VELOCIDADE_ANIMACAO = 0.0001 # (quanto menor, mais rápido)
+VELOCIDADE_ANIMACAO = 0.01 # (quanto menor, mais rápido)
