@@ -151,79 +151,110 @@ Autores: Hermes e Rafael
 
 """
 
-def encontrarFim(Labirinto, MaxLinha, MaxColuna):
-    l = int(round(MaxLinha / 2, 0))
-    c = int(round(MaxColuna / 2, 0))
+#Caminho = 0
+#Parede = 1
+#PontoDePartida = 2
+#PontoDeChegada = 3
+#Andado = 4
 
+# Função para encontrar o fim do labirinto (utilizado pela Heurística do Manhattan)
+def encontrarFim(Labirinto, MaxLinha, MaxColuna):
+    # O final do labirinto sempre estará do meio para o fim
+    # Otimizamos a busca da cordenada final para começar a partir do meio do labirinto
+    l = int(round(MaxLinha / 2, 0)) # metade das linhas
+    c = int(round(MaxColuna / 2, 0)) # metade das colunas
+
+    # Loop for para achar o final do labirinto começando do meio para o fim
     for i in range(l, MaxLinha):
       for j in range(c, MaxColuna):
-        if Labirinto[i][j] == 3: # Chegada
-          return (i, j)
+        if Labirinto[i][j] == 3: # Encontrou "3" no labirinto, ou seja, a saída
+          return (i, j) # Retorna a coordenada de saída do labirinto (Linha, Coluna)
 
+# Função auxiliar para executar a heurística do Manhattan
+# Se baseia em calcular qual é a distância do início para o fim, ignorando paredes ou células visitadas
 def PreManhattan(max_linhas, max_colunas, destino):
     Fy, Fx = destino
-    return [[abs(y - Fy) + abs(x - Fx)           # tabela inteira
-             for x in range(max_colunas)]
-             for y in range(max_linhas)]
+    # Retorna uma matriz das distâncias do início para o fim para evitar chamar a função repetidas vezes
+    return [[abs(y - Fy) + abs(x - Fx) # Calcula a distância (posição atual - destino)
+             for x in range(max_colunas)] # Loop para posições da coluna
+             for y in range(max_linhas)] # Loop para posições da linha
 
+# Algoritimo de execução do DFS
 def DFS(Labirinto):
-    Historico = []
-    Pilha = []
+    Historico = [] # Vetor para guardar o histórico de posições visitadas pelo DFS. EX: [(1,1), (1,2), (1,3)...]
+    Pilha = [] # Pilha para armazenar possíveis posições a serem acessadas pelo DFS, ou seja, caminhos possíveis são empilhados e desempilhados conforme a necessidade
+    # Apenas nomes para melhor identificar os métodos que envolvem a manipulação da pilha, ou seja, push para (Pilha.append) e pop para (Pilha.pop)
     push = Pilha.append
     pop = Pilha.pop
 
-    MaxLinha = len(Labirinto)
-    MaxColuna = len(Labirinto[0])
+    MaxLinha = len(Labirinto) # Total de linhas do labirinto
+    MaxColuna = len(Labirinto[0]) # Total de colunas do labirinto
 
+    # Vetores auxiliares que utilizamos para melhor se movimentar dentro do labirinto
+    # São utilizados em conjunto, assim podemos otimizar toda a busca e deixar tanto o DFS quanto o Manhattan mais organizados
+    # Ex: ir para baixo = DirecaoLinha[0] + DirecaoColuna[0]
+    # Ex: ir para direita = DirecaoLinha[1] + DirecaoColuna[1]
+    # Ex: ir para esquerda = DirecaoLinha[2] + DirecaoColuna[2]
+    # Ex: ir para cima = DirecaoLinha[3] + DirecaoColuna[3]
     DirecaoLinha = [1, 0, 0, -1]
     DirecaoColuna = [0, 1, -1, 0]
 
-    Final = encontrarFim(Labirinto, MaxLinha, MaxColuna)
-    H = PreManhattan(MaxLinha, MaxColuna, Final)
+    Final = encontrarFim(Labirinto, MaxLinha, MaxColuna) # Chama a função para encontrar o final do labirinto, contém as posições de x e y em forma de tupla
+    H = PreManhattan(MaxLinha, MaxColuna, Final) # Chama a função auxiliar do Manhattan e aloca todos as distâncias em uma matriz H, para evitar buscas repetitivas
 
-    Historico.append((1, 1))
+    Historico.append((1, 1)) # Acrescentamos a primeira posição (1,1) na pilha de histórico, pois sempre será acessada, é a posição inicial do labirinto
 
-    Baixo  = -1        
-    if Labirinto[2][1] not in (1, 4):          
-        Baixo = H[2][1]
+    # Como as posições para a direita e para baixo são as únicas possíveis no começo do labirinto, já calculamos qual caminho percorrer para evitar que o mesmo seja processado pelo loop e gere mais tempo de execução
+    Baixo = -1 # Acrescentamos -1 par evitar possíveis erros caso o seu respectivo if não seja acessado
+    if Labirinto[2][1] not in (1, 4): # Verifica se o caminho para a baixo é valido, ou seja, não é parede ou já foi percorrido
+        Baixo = H[2][1] # Acrescenta para a variável "Baixo" a respectiva distância até o final do labirinto, contida em H
 
+    # Mesmo método para a visita acima descrita, porém para a direita
     Direita = -1
-    if Labirinto[1][2] not in (1, 4): 
+    if Labirinto[1][2] not in (1, 4):
         Direita= H[1][2]
 
-    # empilha primeiro a direção com heurística MAIOR
-    if Baixo >= Direita:
-        if Baixo >= 0: 
-          push((2, 1)) 
-        if Direita >= 0: 
-          push((1, 2)) 
-    else:
-        push((1, 2))
-        if Baixo >= 0: 
-          push((2, 1))
+    # Empilha primeiro a direção com heurística MAIOR
+    if Baixo >= Direita: # Caso a distância para direita seja menor. Pilha = (coordenada baixo),(coordenada direita)
+        if Baixo >= 0: # Verifica se o baixo é maior do que 0, ou seja, para evitar o caso do baixo = -1
+          push((2, 1)) # Acrescentamos na pilha a posição para a baixo
+        if Direita >= 0: # Faz a mesma verificação, porém para a direita, para evitar direita = -1
+          push((1, 2)) # Acrescentamos na pilha a posição para a direita
+    else: # Caso a distância para baixo seja menor. Pilha = (coordenada direita),(coordenada baixo)
+        push((1, 2)) # Acrescentamos na pilha a posição para a direita
+        if Baixo >= 0: # Verificação para evitar -1
+          push((2, 1)) # Acrescentamos na pilha a posição para a baixo
 
-    while len(Pilha) > 0: # pilha não vazia
-        LinhaAtual, ColunaAtual = pop()
-        Historico.append((LinhaAtual, ColunaAtual))
-        Labirinto[LinhaAtual][ColunaAtual] = 4
+    while len(Pilha) > 0: # Loop para enquanto a pilha não estiver vazia, ou seja, ainda tem coordenadas válidas para acessar
+        LinhaAtual, ColunaAtual = pop() # Retiramos da pilha as coordenadas de linha e coluna que estão presentes no topo
+        Historico.append((LinhaAtual, ColunaAtual)) # Acrescentamos no histórico como coordenadas visitadas
+        Labirinto[LinhaAtual][ColunaAtual] = 4 # Marcamos a coordenada como visitada na matriz de labirinto, ou seja, = 4
 
-        # Baixo, Direita, Esquerda, Cima
-        Vizinhos = []
+        # Matriz auxiliar para calcular a heurística de Manhattan, onde calcula todos os os possíveis vizinhos da posição atual
+        # Os vizinhos são armazenados da seguinte maneira: Baixo, Direita, Esquerda, Cima
+        Vizinhos = [] # Priorizamos Baixo e Direita na frente pois é para onde o final do labirinto está
 
-        for IndiceDirecao in range(4): # DFS (4 direções)
-            LinhaAdjacente = LinhaAtual + DirecaoLinha[IndiceDirecao] 
-            ColunaAdjacente = ColunaAtual + DirecaoColuna[IndiceDirecao]
+        # DFS (4 direções)
+        for IndiceDirecao in range(4): # Loop para verificar as 4 direções que podem ser visitadas (baixo, cima, direita, esquerda)
+            LinhaAdjacente = LinhaAtual + DirecaoLinha[IndiceDirecao] # Calculo da linha adjacente com o auxilio do vetor de DirecaoLinha
+            ColunaAdjacente = ColunaAtual + DirecaoColuna[IndiceDirecao]# Calculo da coluna adjacente com o auxilio do vetor de DirecaoColuna
 
-            if Labirinto[LinhaAdjacente][ColunaAdjacente] in (1, 4): # Antigo Is verify pula se for parede ou andado
-                continue
+            # Verifica se a coordenada de linha e coluna adjacentes são parede ou já foram visitadas, ou seja, = 1 ou = 4
+            if Labirinto[LinhaAdjacente][ColunaAdjacente] in (1, 4):
+                continue # Caso seja verdade, apenas pula para o próximo vizinho
 
+            # Verifica se as coordenadas analisadas já são as respetivas coordenadas finais do labirinto
             if (LinhaAdjacente, ColunaAdjacente) == Final:
+              # Acrescenta a coordenada no vetor de histórico de posições visitadas e retorna o mesmo
               Historico.append((LinhaAdjacente, ColunaAdjacente))
               return (Historico)
 
+            # Acrescenta ao vetor de vizinhos a distância presente na matriz H, além do indice de direção para saber qual é a direção que tal linha e coluna é percorrido
             Vizinhos.append((H[LinhaAdjacente][ColunaAdjacente], IndiceDirecao, LinhaAdjacente, ColunaAdjacente))
 
-        Vizinhos.sort(key=lambda t: (-t[0], t[1])) 
+        # Ordemos o vetor para que a maior distância fique primeiro, e em caso de empate, ordenamos com base no Indice de Direção, ou seja, para que priorize os vizinhos que vão para baixo e direita respectivamente
+        Vizinhos.sort(key=lambda t: (-t[0], t[1]))
 
+        # Acrescenta à pilha todos os vizinhos possíveis, com base em sua ordem anteriormente calculada com a heurística Manhattan
         for _, IndiceDirecao, LinhaAdjacente, ColunaAdjacente in Vizinhos:
-          push((LinhaAdjacente, ColunaAdjacente))   
+          push((LinhaAdjacente, ColunaAdjacente)) # Vai para a pilha primeiro os vizinhos com maior distância, para que os com menor distância fiquem no topo, e assim sejam escolhidos primeiro
