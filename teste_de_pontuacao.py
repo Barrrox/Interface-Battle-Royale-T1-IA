@@ -1,8 +1,8 @@
 import time
 import numpy as np
 from algoritmos import *
-from caminho_final import aEstrela
 import random
+
 
 
 class DisjointSet:
@@ -38,6 +38,7 @@ class DisjointSet:
         def __init__(self, val, parent):
             self.val = val
             self.parent = parent
+
 
 def gerar_labirinto_kruskal(width, height):
     """
@@ -166,7 +167,6 @@ def gerar_labirinto_kruskal(width, height):
     print(f"Labirinto gerado em {t_gerar_labirinto} segundos")
     return labirinto_matriz
 
-
 def executar_algoritmo(func_algoritmo, labirinto):
     """Função alvo da thread: executa um algoritmo e mede o tempo."""
     tempo_inicial = time.perf_counter()
@@ -181,13 +181,15 @@ def executar_algoritmo(func_algoritmo, labirinto):
 
 # DEFINE ALTURA E LARGURA
 
-largura = 50
-altura = 50
+largura = 5
+altura = 5
+# labirintos_por_iteracao = 1
 
 algoritmos = {
     "GBFS": algoritmo_gbfs,
     "DFS": DFS,
     "A*": aEstrelaAlg
+    # "def" : algoritmo_dead_end_filling
 }
 
 # Cria um dicionario em que:
@@ -200,8 +202,6 @@ resultados = {
     "celulas visitadas" : 0
     } for nome in algoritmos
 }
-
-
 
 pontuacao_final = {
     nome : 0 for nome in algoritmos
@@ -223,14 +223,14 @@ for algoritmo in algoritmos:
     resultados[algoritmo]["pontuacao_media"] += (tempo*espaco) # Ja soma dividido para calcular a media 
         
     # Calculando vencedor para o labirinto de tamanho atual    
+
     # A melhor pontuacao será a mais baixa
     melhor_pontuacao = np.inf # infinito
     vencedor = ""
 
-    
 print(f"\n ----------------- LABIRINTO {largura*2 + 1}x{altura*2 + 1} ----------------- \n")
+
 for algoritmo in resultados:
-    
     # Guarda a pontuacao do algoritmo atual
     t_exe = resultados[algoritmo]["tempo execucao"]
     c_visitadas = resultados[algoritmo]["celulas visitadas"]
